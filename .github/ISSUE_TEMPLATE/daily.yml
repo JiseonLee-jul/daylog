@@ -1,6 +1,5 @@
 name: Daily Planner
 description: Daily plan and review
-title: ""
 labels: ["daily"]
 body:
   - type: markdown
