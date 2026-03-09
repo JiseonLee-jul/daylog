@@ -1,0 +1,39 @@
+name: Daily Planner
+description: Daily plan and review
+title: ""
+labels: ["daily"]
+body:
+  - type: markdown
+    attributes:
+      value: "## Plan"
+  - type: textarea
+    id: plan
+    attributes:
+      label: Plan
+      description: "Today's tasks"
+      value: |
+        - [ ]
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: "## Review"
+  - type: textarea
+    id: review
+    attributes:
+      label: Review
+      description: "Daily review"
+      value: |
+        **오늘 한 일**
+
+
+        **내일 할 것**
+
+
+        ### (선택)
+        - 자기 평가:
+        - 배운 점:
+        - 막혔던 점:
+        - 아이디어:
+    validations:
+      required: false

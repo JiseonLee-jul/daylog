@@ -1,0 +1,74 @@
+name: Build Pages Data
+
+on:
+  issues:
+    types: [opened, edited, closed, deleted]
+  milestone:
+    types: [created, edited, closed, deleted]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate data
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Fetch all issues with 'daily' label
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'daily',
+              state: 'all',
+              per_page: 100,
+            });
+
+            const issueData = issues.map(issue => ({
+              number: issue.number,
+              title: issue.title,
+              state: issue.state,
+              body: issue.body,
+              created_at: issue.created_at,
+              updated_at: issue.updated_at,
+              html_url: issue.html_url,
+            }));
+
+            // Fetch milestones
+            const milestones = await github.paginate(github.rest.issues.listMilestones, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              per_page: 100,
+            });
+
+            const milestoneData = milestones.map(m => ({
+              number: m.number,
+              title: m.title,
+              description: m.description,
+              state: m.state,
+              open_issues: m.open_issues,
+              closed_issues: m.closed_issues,
+              due_on: m.due_on,
+              html_url: m.html_url,
+            }));
+
+            fs.mkdirSync('docs/data', { recursive: true });
+            fs.writeFileSync('docs/data/issues.json', JSON.stringify(issueData, null, 2));
+            fs.writeFileSync('docs/data/milestones.json', JSON.stringify(milestoneData, null, 2));
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/
+          git diff --cached --quiet || (git commit -m "chore: update pages data" && git push)
