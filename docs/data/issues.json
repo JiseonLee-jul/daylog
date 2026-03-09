@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "number": 1,
+    "title": "2026-03-09 (월)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] 현대알비 배치 작업, 삭제 작업 수정 및 테스트 완료 후 프로덕션 서버 배포\n- [ ] WISE 추가할 기능 정리 & 로드맵\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-09T07:06:16Z",
+    "updated_at": "2026-03-09T07:08:56Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/1"
+  }
+]
