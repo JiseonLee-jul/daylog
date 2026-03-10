@@ -1,11 +1,20 @@
 [
   {
+    "number": 3,
+    "title": "2026-03-10 (화)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] #2 WISE 추가 기능 정리 및 로드맵\n- [ ] githubio 개인 블로그 만들기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-10T01:27:21Z",
+    "updated_at": "2026-03-10T01:27:21Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/3"
+  },
+  {
     "number": 1,
     "title": "2026-03-09 (월)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] 현대알비 배치 작업, 삭제 작업 수정 및 테스트 완료 후 프로덕션 서버 배포\n- [ ] WISE 추가할 기능 정리 & 로드맵\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] 현대알비 배치 작업, 삭제 작업 수정 및 테스트 완료 후 프로덕션 서버 배포\n- [ ] WISE 추가할 기능 정리 & 로드맵\n\n\n### Review\n\n**오늘 한 일**\n- 현대알비 배치/삭제 작업 수정 후 로컬 테스트 완료 및 운영 서버 배포\n  + 로컬에서 배치/삭제 작업 자동으로 트리거 되는 것 확인\n- daylog github 만들기\n- 개인 생산성 claude code plugin 만들기\n\n**내일 할 것**\n- githubio(블로그) 만들기\n- WISE 추가할 기능 정리 & 로드맵\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-09T07:06:16Z",
-    "updated_at": "2026-03-09T07:08:56Z",
+    "updated_at": "2026-03-10T01:25:12Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/1"
   }
 ]
