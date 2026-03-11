@@ -1,11 +1,20 @@
 [
   {
+    "number": 11,
+    "title": "2026-03-11 (수)",
+    "state": "open",
+    "body": "## Plan\n- [ ] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [ ] [WISE] #7 보안 가드레일 추가\n- [ ] [WISE] #9 기타 프롬프트 보강\n\n## Review\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:",
+    "created_at": "2026-03-11T01:07:04Z",
+    "updated_at": "2026-03-11T01:07:04Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/11"
+  },
+  {
     "number": 3,
     "title": "2026-03-10 (화)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] [WISE] #2 \n- [ ] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [ ] [ETC] githubio 개인 블로그 만들기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] [WISE] #2 \n- [ ] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [x] [ETC] githubio 개인 블로그 만들기\n\n\n### Review\n\n**오늘 한 일**\n- [WISE] #2 \n- [WISE] #7 (WISE 보안 문제에 OWASP의 Top 10 LLM 보안 문제 패턴 매핑하기)\n- [ETC] githubio 개인 블로그 만들기\n\n**내일 할 것**\n- [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [WISE] #7 \n- [WISE] #9 \n\n\n### (선택)\n- 자기 평가: \n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-10T01:27:21Z",
-    "updated_at": "2026-03-10T01:28:41Z",
+    "updated_at": "2026-03-11T01:03:32Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/3"
   },
   {
