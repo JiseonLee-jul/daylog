@@ -1,11 +1,20 @@
 [
   {
+    "number": 12,
+    "title": "2026-03-12 (목)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] [WISE] #9 \n- [ ] [WISE] #6 \n- [ ] [WISE] #8 \n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-12T01:14:51Z",
+    "updated_at": "2026-03-12T01:14:51Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/12"
+  },
+  {
     "number": 11,
     "title": "2026-03-11 (수)",
-    "state": "open",
-    "body": "## Plan\n- [ ] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [ ] [WISE] #7 보안 가드레일 추가\n- [ ] [WISE] #9 기타 프롬프트 보강\n\n## Review\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:",
+    "state": "closed",
+    "body": "## Plan\n- [ ] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [x] [WISE] #7 보안 가드레일 추가\n- [ ] [WISE] #9 기타 프롬프트 보강\n\n## Review\n**오늘 한 일**\n  - [WISE] 가드레일 설계 리서치 (OWASP Top 10 LLM, 프롬프트 인젝션 패턴 등)    \n  - [WISE] #7 4계층 보안 가드레일 구현 및 프롬프트 강화 (파일 시스템 노출 및 에이전트 위임 우회 방지)\n  - [WISE] Langfuse 순환 임포트 수정\n  - [WISE] Langfuse v3 CallbackHandler resume 인자 호환성 수정\n  - [ETC] githubio 개인 블로그 설정 및 첫 포스트 발행 (WISE 시스템 프롬프트 유출 분석)\n\n**내일 할 것**\n- [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [WISE] #9 기타 프롬프트 보강\n\n### (선택)\n- 자기 평가:\n- 배운 점: deepagents 라이브러리의 create_deep_agent() 함수가 내부적으로 general-purpose라는 Subagent를 자동 생성한다. 따라서, deepagent로 만든 Agent의 보안/가드레일 정책 적용 시 의식해야한다. 프레임워크가 자동 생성하는 컴포넌트의 권한도 감사해야한다.\n- 막혔던 점:\n- 아이디어:",
     "created_at": "2026-03-11T01:07:04Z",
-    "updated_at": "2026-03-11T01:07:04Z",
+    "updated_at": "2026-03-11T09:53:25Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/11"
   },
   {
