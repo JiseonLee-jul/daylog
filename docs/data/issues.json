@@ -1,11 +1,20 @@
 [
   {
+    "number": 17,
+    "title": "2026-03-16 (월)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] #8 \n- [ ] #5\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-16T01:06:00Z",
+    "updated_at": "2026-03-16T01:06:00Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/17"
+  },
+  {
     "number": 13,
     "title": "2026-03-13 (금)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] [ODS] 테스트\n- [ ] [WISE] 오케스트레이터 의도 분석 단계 구현 (roadmap 6번)\n- [ ] [WISE] KnowledgeBuilder 카테고리 분류 기준 적용 및 테스트\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [ ] [WISE] #6\n- [ ] [WISE] #8\n\n### Review\n\n**오늘 한 일**\n- [WISE] #8 세션 메모리 관리: Slack 세션 컨텍스트/메모리 관리 문제 분석 및 개선 방향 설계\n- [WISE] #9 프롬프트 보강: 의도 분석 책임을 KnowledgeRetriever에서 Orchestrator로 이동하는 설계 완료\n- [WISE] daylog task issue (#7, #9) description 보강\n- [ODS] Nano Banana API image-to-image 생성 기능 테스트\n\n**내일 할 것**\n- [WISE] #8 세션 메모리 관리 체계 개선 구현\n\n### (선택)\n- 자기 평가:\n- 배운 점: deepagents SkillsMiddleware에서 skills 경로가 FilesystemBackend에 종속되는 구조 파악\n- 막혔던 점:\n- 아이디어:",
     "created_at": "2026-03-13T01:00:09Z",
-    "updated_at": "2026-03-13T01:00:09Z",
+    "updated_at": "2026-03-16T01:00:43Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/13"
   },
   {
