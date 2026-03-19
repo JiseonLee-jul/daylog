@@ -1,5 +1,14 @@
 [
   {
+    "number": 20,
+    "title": "2026-03-19 (목)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ]\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-19T01:39:47Z",
+    "updated_at": "2026-03-19T01:39:47Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/20"
+  },
+  {
     "number": 19,
     "title": "2026-03-19 (수)",
     "state": "open",
@@ -14,7 +23,7 @@
     "state": "closed",
     "body": "### Plan\n\n- [ ] [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n\n### Review\n\n**오늘 한 일**\n- [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n**내일 할 것**\n- [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-19T01:38:15Z",
-    "updated_at": "2026-03-19T01:38:54Z",
+    "updated_at": "2026-03-19T01:39:28Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/18"
   },
   {
