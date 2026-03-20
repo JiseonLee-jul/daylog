@@ -1,20 +1,29 @@
 [
   {
+    "number": 21,
+    "title": "2026-03-20 (금)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] WISE Agent 운영 라이프사이클(로그/Trace/평가/테스트) 설계 \n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-20T06:28:11Z",
+    "updated_at": "2026-03-20T06:28:11Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/21"
+  },
+  {
     "number": 20,
     "title": "2026-03-19 (목)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ]\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] WISE 컴포넌트별 기술 결정 사항 확정\n\n\n### Review\n\n**오늘 한 일**\n- WISE 프로젝트 기술 설계 의사결정 집중 진행 (WISE-git-pv 세션, 대규모)                                                                   \n  - SlackBolt 프레임워크 결정: Socket Mode 채택, 비동기 처리 구조 확정                                                                    \n  - Worker 설계: 폴링 방식(5초 고정) 채택, 단일 Worker MVP 후 확장 계획                                                                   \n  - 설정 관리: YAML 기반 설정 파일 분리 결정 (.env는 시크릿만)                                                                            \n  - PostgreSQL 스키마 설계: LightRAG 테이블과 공존하는 public 스키마 구조 결정                                                            \n  - Worker 파이프라인 흐름 설계                                                                                          \n  - Docker Compose 볼륨 설정, DB 백업/복구 방향 논의                                                                                      \n  - Agent Layer 설계: LangGraph 기반 Supervisor-SubAgent 구조 확정                                                                                                                                                        \n  - LangChain MiddleWare 적용 결정: RateLimit, ModelFallback, Input/Output Guard                                                          \n  - 메모리 관리 설계: 단기(채널별) + 장기(사용자별) 이중 구조                                                                  \n  - system-design 문서와 technical-decisions 문서 책임 분리 및 목차 정리\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-19T01:39:47Z",
-    "updated_at": "2026-03-19T01:39:47Z",
+    "updated_at": "2026-03-20T06:27:24Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/20"
   },
   {
     "number": 19,
-    "title": "2026-03-19 (수)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "title": "2026-03-18 (수)",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] [WISE] WISE 프로젝트 아키텍처 재설계\n\n\n### Review\n\n**오늘 한 일**\n- WISE 프로젝트 인프라 아키텍처 설계                                                \n- 지식 수집 파이프라인 상세 설계 (Slack -> Bronze -> Silver 흐름, 콘텐츠 타입별 처리 분류표)\n- 저장 구조 설계 확정 (Bronze/Silver/Gold 계층, 파일 네이밍 규칙, frontmatter 구조) \n- PostgreSQL 메타 DB 도입 결정 및 테이블 스키마 설계 (documents 테이블 등)                                                                                                                  \n\n\n**내일 할 것**\n- WISE MVP 전체 기술 구현 계획 확정\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-19T01:39:16Z",
-    "updated_at": "2026-03-19T01:39:21Z",
+    "updated_at": "2026-03-19T01:44:45Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/19"
   },
   {
