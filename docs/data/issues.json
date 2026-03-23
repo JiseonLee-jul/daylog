@@ -1,11 +1,20 @@
 [
   {
+    "number": 22,
+    "title": "2026-03-23 (월)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] AutoBE, Typia 공부\n- [ ] WISE 설계에 AutoBE, Typia 공부한 것 반영\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-23T04:59:35Z",
+    "updated_at": "2026-03-23T04:59:39Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/22"
+  },
+  {
     "number": 21,
     "title": "2026-03-20 (금)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] WISE Agent 운영 라이프사이클(로그/Trace/평가/테스트) 설계 \n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] WISE Agent 운영 라이프사이클(로그/Trace/평가/테스트) 설계 \n\n\n### Review\n\n**오늘 한 일**\n- WISE 컴포넌트별 기술적 의사결정 진행\n- python 개발용 CLAUDE.md 만들기\n- 왜 WISE 설계를 바꿔야하는지 문서 정리\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-20T06:28:11Z",
-    "updated_at": "2026-03-20T06:28:11Z",
+    "updated_at": "2026-03-23T01:14:38Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/21"
   },
   {
