@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1774419643808,
+  "projectRoot": "F:\\PROJECT\\00_BASECAMP\\00_git_daylog",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 1,
+      "lastAccessed": 1774419643760,
+      "keyFiles": [
+        "index.html"
+      ]
+    },
+    "vault": {
+      "path": "vault",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1774419643760,
+      "keyFiles": []
+    },
+    "docs\\data": {
+      "path": "docs\\data",
+      "purpose": "Data files",
+      "fileCount": 2,
+      "lastAccessed": 1774419643761,
+      "keyFiles": [
+        "issues.json",
+        "milestones.json"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}
