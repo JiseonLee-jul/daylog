@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-25T06:29:44.567Z",
+  "updatedAt": "2026-03-25T06:42:37.657Z",
   "missions": [
     {
       "id": "session:1418415e-ff18-4e28-9255-c6dde015fd8e:none",
@@ -7,15 +7,15 @@
       "name": "none",
       "objective": "Session mission",
       "createdAt": "2026-03-25T06:22:32.126Z",
-      "updatedAt": "2026-03-25T06:29:44.567Z",
-      "status": "running",
+      "updatedAt": "2026-03-25T06:42:37.657Z",
+      "status": "done",
       "workerCount": 6,
       "taskCounts": {
         "total": 6,
         "pending": 0,
         "blocked": 0,
-        "inProgress": 1,
-        "completed": 5,
+        "inProgress": 0,
+        "completed": 6,
         "failed": 0
       },
       "agents": [
@@ -73,11 +73,11 @@
           "name": "scientist:aba2a28",
           "role": "scientist",
           "ownership": "aba2a2885e185afd0",
-          "status": "running",
+          "status": "done",
           "currentStep": null,
-          "latestUpdate": null,
+          "latestUpdate": "completed",
           "completedSummary": null,
-          "updatedAt": "2026-03-25T06:29:44.567Z"
+          "updatedAt": "2026-03-25T06:42:37.657Z"
         }
       ],
       "timeline": [
@@ -104,6 +104,14 @@
           "agent": "scientist:aba2a28",
           "detail": "started scientist:aba2a28",
           "sourceKey": "session-start:aba2a2885e185afd0"
+        },
+        {
+          "id": "session-stop:aba2a2885e185afd0:2026-03-25T06:42:37.657Z",
+          "at": "2026-03-25T06:42:37.657Z",
+          "kind": "completion",
+          "agent": "scientist:aba2a28",
+          "detail": "completed",
+          "sourceKey": "session-stop:aba2a2885e185afd0"
         }
       ]
     }
