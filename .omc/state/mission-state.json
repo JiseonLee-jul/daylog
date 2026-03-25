@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-25T06:28:44.095Z",
+  "updatedAt": "2026-03-25T06:29:44.567Z",
   "missions": [
     {
       "id": "session:1418415e-ff18-4e28-9255-c6dde015fd8e:none",
@@ -7,15 +7,15 @@
       "name": "none",
       "objective": "Session mission",
       "createdAt": "2026-03-25T06:22:32.126Z",
-      "updatedAt": "2026-03-25T06:28:44.095Z",
+      "updatedAt": "2026-03-25T06:29:44.567Z",
       "status": "running",
-      "workerCount": 5,
+      "workerCount": 6,
       "taskCounts": {
-        "total": 5,
+        "total": 6,
         "pending": 0,
         "blocked": 0,
         "inProgress": 1,
-        "completed": 4,
+        "completed": 5,
         "failed": 0
       },
       "agents": [
@@ -23,11 +23,11 @@
           "name": "scientist:a2cfb36",
           "role": "scientist",
           "ownership": "a2cfb369316809cbb",
-          "status": "running",
+          "status": "done",
           "currentStep": null,
-          "latestUpdate": null,
+          "latestUpdate": "completed",
           "completedSummary": null,
-          "updatedAt": "2026-03-25T06:22:32.126Z"
+          "updatedAt": "2026-03-25T06:29:11.786Z"
         },
         {
           "name": "scientist:a10da1f",
@@ -68,57 +68,19 @@
           "latestUpdate": "completed",
           "completedSummary": null,
           "updatedAt": "2026-03-25T06:28:18.756Z"
+        },
+        {
+          "name": "scientist:aba2a28",
+          "role": "scientist",
+          "ownership": "aba2a2885e185afd0",
+          "status": "running",
+          "currentStep": null,
+          "latestUpdate": null,
+          "completedSummary": null,
+          "updatedAt": "2026-03-25T06:29:44.567Z"
         }
       ],
       "timeline": [
-        {
-          "id": "session-start:a93501ee3dae0fdd6:2026-03-25T06:22:44.478Z",
-          "at": "2026-03-25T06:22:44.478Z",
-          "kind": "update",
-          "agent": "scientist:a93501e",
-          "detail": "started scientist:a93501e",
-          "sourceKey": "session-start:a93501ee3dae0fdd6"
-        },
-        {
-          "id": "session-start:ace2e9ccf7dbb9162:2026-03-25T06:22:51.179Z",
-          "at": "2026-03-25T06:22:51.179Z",
-          "kind": "update",
-          "agent": "scientist:ace2e9c",
-          "detail": "started scientist:ace2e9c",
-          "sourceKey": "session-start:ace2e9ccf7dbb9162"
-        },
-        {
-          "id": "session-start:a56a5617f2da3ff6a:2026-03-25T06:22:59.933Z",
-          "at": "2026-03-25T06:22:59.933Z",
-          "kind": "update",
-          "agent": "scientist:a56a561",
-          "detail": "started scientist:a56a561",
-          "sourceKey": "session-start:a56a5617f2da3ff6a"
-        },
-        {
-          "id": "session-stop:a93501ee3dae0fdd6:2026-03-25T06:28:13.810Z",
-          "at": "2026-03-25T06:28:13.810Z",
-          "kind": "completion",
-          "agent": "scientist:a93501e",
-          "detail": "completed",
-          "sourceKey": "session-stop:a93501ee3dae0fdd6"
-        },
-        {
-          "id": "session-stop:a56a5617f2da3ff6a:2026-03-25T06:28:18.756Z",
-          "at": "2026-03-25T06:28:18.756Z",
-          "kind": "completion",
-          "agent": "scientist:a56a561",
-          "detail": "completed",
-          "sourceKey": "session-stop:a56a5617f2da3ff6a"
-        },
-        {
-          "id": "session-stop:ace2e9ccf7dbb9162:2026-03-25T06:28:24.427Z",
-          "at": "2026-03-25T06:28:24.427Z",
-          "kind": "completion",
-          "agent": "scientist:ace2e9c",
-          "detail": "completed",
-          "sourceKey": "session-stop:ace2e9ccf7dbb9162"
-        },
         {
           "id": "session-stop:a10da1feb1ba69bda:2026-03-25T06:28:44.095Z",
           "at": "2026-03-25T06:28:44.095Z",
@@ -126,6 +88,22 @@
           "agent": "scientist:a10da1f",
           "detail": "completed",
           "sourceKey": "session-stop:a10da1feb1ba69bda"
+        },
+        {
+          "id": "session-stop:a2cfb369316809cbb:2026-03-25T06:29:11.786Z",
+          "at": "2026-03-25T06:29:11.786Z",
+          "kind": "completion",
+          "agent": "scientist:a2cfb36",
+          "detail": "completed",
+          "sourceKey": "session-stop:a2cfb369316809cbb"
+        },
+        {
+          "id": "session-start:aba2a2885e185afd0:2026-03-25T06:29:44.567Z",
+          "at": "2026-03-25T06:29:44.567Z",
+          "kind": "update",
+          "agent": "scientist:aba2a28",
+          "detail": "started scientist:aba2a28",
+          "sourceKey": "session-start:aba2a2885e185afd0"
         }
       ]
     }
