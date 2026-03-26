@@ -1,11 +1,20 @@
 [
   {
+    "number": 24,
+    "title": "2026-03-26 (목)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] 기존 WISE 기능 정리\n- [ ] AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-26T01:33:19Z",
+    "updated_at": "2026-03-26T01:33:19Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/24"
+  },
+  {
     "number": 23,
     "title": "2026-03-25 (수)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] K-AI Leadership Summit 내용 + 뤼튼 AX 보고서 종합 정리\n- [ ] 우리 회사의 사업 방향성에 대한 정리글\n- [ ] 기존 WISE 기능 정리\n- [ ] AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] K-AI Leadership Summit 내용 + 뤼튼 AX 보고서 종합 정리\n- [x] 우리 회사의 사업 방향성에 대한 정리글\n- [ ] 기존 WISE 기능 정리\n- [ ] AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n\n### Review\n\n**오늘 한 일**\n- K-AI Leadership Summit 내용 + 뤼튼 AX 보고서 종합 정리\n- 우리 회사의 사업 방향성에 대한 정리글 작성\n\n**내일 할 것**\n- 기존 WISE 기능 정리\n- AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-25T01:25:00Z",
-    "updated_at": "2026-03-25T01:25:00Z",
+    "updated_at": "2026-03-26T01:32:54Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/23"
   },
   {
