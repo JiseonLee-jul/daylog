@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "number": 1,
+    "title": "WISE 1차 배포",
+    "description": "WISE를 v1.0.0으로 배포합니다.",
+    "state": "open",
+    "open_issues": 5,
+    "closed_issues": 6,
+    "due_on": "2026-03-20T00:00:00Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/milestone/1"
+  }
+]

@@ -1,11 +1,119 @@
 [
   {
+    "number": 24,
+    "title": "2026-03-26 (목)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] 기존 WISE 기능 정리\n- [ ] AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-26T01:33:19Z",
+    "updated_at": "2026-03-26T01:33:19Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/24"
+  },
+  {
+    "number": 23,
+    "title": "2026-03-25 (수)",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] K-AI Leadership Summit 내용 + 뤼튼 AX 보고서 종합 정리\n- [x] 우리 회사의 사업 방향성에 대한 정리글\n- [ ] 기존 WISE 기능 정리\n- [ ] AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n\n### Review\n\n**오늘 한 일**\n- K-AI Leadership Summit 내용 + 뤼튼 AX 보고서 종합 정리\n- 우리 회사의 사업 방향성에 대한 정리글 작성\n\n**내일 할 것**\n- 기존 WISE 기능 정리\n- AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-25T01:25:00Z",
+    "updated_at": "2026-03-26T01:32:54Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/23"
+  },
+  {
+    "number": 22,
+    "title": "2026-03-23 (월)",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] AutoBE, Typia 공부\n- [ ] WISE 설계에 AutoBE, Typia 공부한 것 반영\n\n\n### Review\n\n**오늘 한 일**\n- Obsidian git 버전 trcking을 하기 위한 세팅 (Obsidian git plugin 설치) \n- Agent 플랫폼 기획을 위한 작업 단계 설정\n\n**내일 할 것**\n- WISE 설계 토대로 Agent 플랫폼 기능 정리\n- AI 지식 베이스 Agent 기능, 지식 구조화 모델링 조사하기\n- 리서치 토대로 Agent 플랫폼 기능 추가\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-23T04:59:35Z",
+    "updated_at": "2026-03-23T09:42:22Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/22"
+  },
+  {
+    "number": 21,
+    "title": "2026-03-20 (금)",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] WISE Agent 운영 라이프사이클(로그/Trace/평가/테스트) 설계 \n\n\n### Review\n\n**오늘 한 일**\n- WISE 컴포넌트별 기술적 의사결정 진행\n- python 개발용 CLAUDE.md 만들기\n- 왜 WISE 설계를 바꿔야하는지 문서 정리\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-20T06:28:11Z",
+    "updated_at": "2026-03-23T01:14:38Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/21"
+  },
+  {
+    "number": 20,
+    "title": "2026-03-19 (목)",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] WISE 컴포넌트별 기술 결정 사항 확정\n\n\n### Review\n\n**오늘 한 일**\n- WISE 프로젝트 기술 설계 의사결정 집중 진행 (WISE-git-pv 세션, 대규모)                                                                   \n  - SlackBolt 프레임워크 결정: Socket Mode 채택, 비동기 처리 구조 확정                                                                    \n  - Worker 설계: 폴링 방식(5초 고정) 채택, 단일 Worker MVP 후 확장 계획                                                                   \n  - 설정 관리: YAML 기반 설정 파일 분리 결정 (.env는 시크릿만)                                                                            \n  - PostgreSQL 스키마 설계: LightRAG 테이블과 공존하는 public 스키마 구조 결정                                                            \n  - Worker 파이프라인 흐름 설계                                                                                          \n  - Docker Compose 볼륨 설정, DB 백업/복구 방향 논의                                                                                      \n  - Agent Layer 설계: LangGraph 기반 Supervisor-SubAgent 구조 확정                                                                                                                                                        \n  - LangChain MiddleWare 적용 결정: RateLimit, ModelFallback, Input/Output Guard                                                          \n  - 메모리 관리 설계: 단기(채널별) + 장기(사용자별) 이중 구조                                                                  \n  - system-design 문서와 technical-decisions 문서 책임 분리 및 목차 정리\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-19T01:39:47Z",
+    "updated_at": "2026-03-20T06:27:24Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/20"
+  },
+  {
+    "number": 19,
+    "title": "2026-03-18 (수)",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] [WISE] WISE 프로젝트 아키텍처 재설계\n\n\n### Review\n\n**오늘 한 일**\n- WISE 프로젝트 인프라 아키텍처 설계                                                \n- 지식 수집 파이프라인 상세 설계 (Slack -> Bronze -> Silver 흐름, 콘텐츠 타입별 처리 분류표)\n- 저장 구조 설계 확정 (Bronze/Silver/Gold 계층, 파일 네이밍 규칙, frontmatter 구조) \n- PostgreSQL 메타 DB 도입 결정 및 테이블 스키마 설계 (documents 테이블 등)                                                                                                                  \n\n\n**내일 할 것**\n- WISE MVP 전체 기술 구현 계획 확정\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-19T01:39:16Z",
+    "updated_at": "2026-03-19T01:44:45Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/19"
+  },
+  {
+    "number": 18,
+    "title": "2026-03-17 (화)",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n\n### Review\n\n**오늘 한 일**\n- [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n**내일 할 것**\n- [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-19T01:38:15Z",
+    "updated_at": "2026-03-19T01:39:28Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/18"
+  },
+  {
+    "number": 17,
+    "title": "2026-03-16 (월)",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] #8 \n- [ ] #5\n\n\n### Review\n\n**오늘 한 일**\n- [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n**내일 할 것**\n- [WISE] WISE 프로젝트 논리 아키텍처 설계\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-16T01:06:00Z",
+    "updated_at": "2026-03-19T01:37:47Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/17"
+  },
+  {
+    "number": 13,
+    "title": "2026-03-13 (금)",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [ ] [WISE] #6\n- [ ] [WISE] #8\n\n### Review\n\n**오늘 한 일**\n- [WISE] #8 세션 메모리 관리: Slack 세션 컨텍스트/메모리 관리 문제 분석 및 개선 방향 설계\n- [WISE] #9 프롬프트 보강: 의도 분석 책임을 KnowledgeRetriever에서 Orchestrator로 이동하는 설계 완료\n- [WISE] daylog task issue (#7, #9) description 보강\n- [ODS] Nano Banana API image-to-image 생성 기능 테스트\n\n**내일 할 것**\n- [WISE] #8 세션 메모리 관리 체계 개선 구현\n\n### (선택)\n- 자기 평가:\n- 배운 점: deepagents SkillsMiddleware에서 skills 경로가 FilesystemBackend에 종속되는 구조 파악\n- 막혔던 점:\n- 아이디어:",
+    "created_at": "2026-03-13T01:00:09Z",
+    "updated_at": "2026-03-16T01:00:43Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/13"
+  },
+  {
+    "number": 12,
+    "title": "2026-03-12 (목)",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] [WISE] #9 \n- [ ] [WISE] #6 \n- [ ] [WISE] #8 \n\n### Review\n\n**오늘 한 일**\n- [WISE] Langfuse 서버 마이그레이션 (192.168.0.47 -> 192.168.100.100): Traces 459건 성공, docker-compose/DB 인증/포트 충돌 해결, 마이그레이션 스크립트 작성\n- [WISE] 오케스트레이터 라우팅 프롬프트 개선: Decision Tree 순서 변경(Agent 위임 우선), Agent Description을 API 계약서 형태로 수정, PR 생성 (`fix/orchestrator-routing-prompt`)\n- [WISE] KnowledgeBuilder 카테고리 분류 기준 재설계: 04_Studies/06 간 교집합 최소화, 테스트 환경 구성 설계\n\n**내일 할 것**\n- [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [WISE] #6 \n- [WISE] #8 \n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점: Langfuse Annotation Queue 마이그레이션 이슈 해결 및 환경 변수 설정으로 인한 에러 디버깅에 시간 소요\n- 아이디어:",
+    "created_at": "2026-03-12T01:14:51Z",
+    "updated_at": "2026-03-13T00:59:26Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/12"
+  },
+  {
+    "number": 11,
+    "title": "2026-03-11 (수)",
+    "state": "closed",
+    "body": "## Plan\n- [ ] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [x] [WISE] #7 보안 가드레일 추가\n- [ ] [WISE] #9 기타 프롬프트 보강\n\n## Review\n**오늘 한 일**\n  - [WISE] 가드레일 설계 리서치 (OWASP Top 10 LLM, 프롬프트 인젝션 패턴 등)    \n  - [WISE] #7 4계층 보안 가드레일 구현 및 프롬프트 강화 (파일 시스템 노출 및 에이전트 위임 우회 방지)\n  - [WISE] Langfuse 순환 임포트 수정\n  - [WISE] Langfuse v3 CallbackHandler resume 인자 호환성 수정\n  - [ETC] githubio 개인 블로그 설정 및 첫 포스트 발행 (WISE 시스템 프롬프트 유출 분석)\n\n**내일 할 것**\n- [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [WISE] #9 기타 프롬프트 보강\n\n### (선택)\n- 자기 평가:\n- 배운 점: deepagents 라이브러리의 create_deep_agent() 함수가 내부적으로 general-purpose라는 Subagent를 자동 생성한다. 따라서, deepagent로 만든 Agent의 보안/가드레일 정책 적용 시 의식해야한다. 프레임워크가 자동 생성하는 컴포넌트의 권한도 감사해야한다.\n- 막혔던 점:\n- 아이디어:",
+    "created_at": "2026-03-11T01:07:04Z",
+    "updated_at": "2026-03-11T09:53:25Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/11"
+  },
+  {
+    "number": 3,
+    "title": "2026-03-10 (화)",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] [WISE] #2 \n- [ ] [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [x] [ETC] githubio 개인 블로그 만들기\n\n\n### Review\n\n**오늘 한 일**\n- [WISE] #2 \n- [WISE] #7 (WISE 보안 문제에 OWASP의 Top 10 LLM 보안 문제 패턴 매핑하기)\n- [ETC] githubio 개인 블로그 만들기\n\n**내일 할 것**\n- [ODS] 교정 전 이미지 Nano Banana API로 교정 후 이미지로 만드는 테스트해보기\n- [WISE] #7 \n- [WISE] #9 \n\n\n### (선택)\n- 자기 평가: \n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-10T01:27:21Z",
+    "updated_at": "2026-03-11T01:03:32Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/3"
+  },
+  {
     "number": 1,
     "title": "2026-03-09 (월)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] 현대알비 배치 작업, 삭제 작업 수정 및 테스트 완료 후 프로덕션 서버 배포\n- [ ] WISE 추가할 기능 정리 & 로드맵\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] 현대알비 배치 작업, 삭제 작업 수정 및 테스트 완료 후 프로덕션 서버 배포\n- [ ] WISE 추가할 기능 정리 & 로드맵\n\n\n### Review\n\n**오늘 한 일**\n- 현대알비 배치/삭제 작업 수정 후 로컬 테스트 완료 및 운영 서버 배포\n  + 로컬에서 배치/삭제 작업 자동으로 트리거 되는 것 확인\n- daylog github 만들기\n- 개인 생산성 claude code plugin 만들기\n\n**내일 할 것**\n- githubio(블로그) 만들기\n- WISE 추가할 기능 정리 & 로드맵\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-09T07:06:16Z",
-    "updated_at": "2026-03-09T07:08:56Z",
+    "updated_at": "2026-03-10T01:25:12Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/1"
   }
 ]
