@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1774419643808,
+  "lastScanned": 1774509908195,
   "projectRoot": "F:\\PROJECT\\00_BASECAMP\\00_git_daylog",
   "techStack": {
     "languages": [],
@@ -38,7 +38,7 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 1,
-      "lastAccessed": 1774419643760,
+      "lastAccessed": 1774509908137,
       "keyFiles": [
         "index.html"
       ]
@@ -47,20 +47,27 @@
       "path": "vault",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1774419643760,
+      "lastAccessed": 1774509908141,
       "keyFiles": []
     },
     "docs\\data": {
       "path": "docs\\data",
       "purpose": "Data files",
       "fileCount": 2,
-      "lastAccessed": 1774419643761,
+      "lastAccessed": 1774509908142,
       "keyFiles": [
         "issues.json",
         "milestones.json"
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1774510052738,
+      "type": "directory"
+    }
+  ],
   "userDirectives": []
 }
