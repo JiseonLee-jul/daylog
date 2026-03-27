@@ -1,11 +1,20 @@
 [
   {
+    "number": 25,
+    "title": "2026-03-27 (금)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] Langfuse Clickhouse 로그가 과도하게  쌓이는 이유 파악하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-27T01:50:07Z",
+    "updated_at": "2026-03-27T01:50:07Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/25"
+  },
+  {
     "number": 24,
     "title": "2026-03-26 (목)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] 기존 WISE 기능 정리\n- [ ] AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] 기존 WISE 기능 정리\n- [x] AI 지식베이스 Agent 특화 기능, 지식 구조화 모델링 조사하기\n\n\n### Review\n\n**오늘 한 일**\n- 기존 WISE 기능 요구사항 확정\n- 지식 구조화 모델링 조사: level과 status 두 개의 축 [ level ] Raw | Curated | Published [ status ] Active | Archived\n- AI 지식베이스 특화 Agent 리서치: 회사와 제품 목록, 전체적인 그림만 이해한 상태 \n- Claude Code Status Line 추가\n\n**내일 할 것**\n- AI 지식베이스 특화 Agent 리서치 완료\n- 우리 회사 Agent 사업 전략 구상\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-26T01:33:19Z",
-    "updated_at": "2026-03-26T01:33:19Z",
+    "updated_at": "2026-03-26T09:26:17Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/24"
   },
   {
