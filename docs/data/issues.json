@@ -1,11 +1,20 @@
 [
   {
+    "number": 27,
+    "title": "2026-03-31 (화)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] 환경연구원 제안서 평가체계 파트 작성\n- [ ] RAG 생태계 공부\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-03-31T00:42:26Z",
+    "updated_at": "2026-03-31T00:42:26Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/27"
+  },
+  {
     "number": 26,
     "title": "2026-03-30 (월)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] 우리 회사 Agent 사업 전략 제언 정리\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] 우리 회사 Agent 사업 전략 제언 정리\n\n\n### Review\n\n**오늘 한 일**\n- 우리 회사 Agent 사업 전략 제언 정리\n- RAG 생태계 공부\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-30T01:27:56Z",
-    "updated_at": "2026-03-30T01:28:00Z",
+    "updated_at": "2026-03-31T00:37:39Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/26"
   },
   {
