@@ -1,11 +1,20 @@
 [
   {
+    "number": 28,
+    "title": "2026-04-07 (화)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] 개인 지식 저장소 Claude Code Plugin 만들기\n- [ ] Agent Platform 기획 우선 순위 확정\n- [ ] 휴니버스 리부트 계획\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-04-07T01:20:10Z",
+    "updated_at": "2026-04-07T01:20:13Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/28"
+  },
+  {
     "number": 27,
     "title": "2026-03-31 (화)",
-    "state": "open",
+    "state": "closed",
     "body": "### Plan\n\n- [ ] 환경연구원 제안서 평가체계 파트 작성\n- [ ] RAG 생태계 공부\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-03-31T00:42:26Z",
-    "updated_at": "2026-03-31T00:42:26Z",
+    "updated_at": "2026-04-07T01:15:44Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/27"
   },
   {
