@@ -1,7 +1,7 @@
 # Knowledge Base Index
 
-*Last updated: 2026-04-09*
-*Sources: 7 | Concepts: 20 | Connections: 10*
+*Last updated: 2026-04-13*
+*Sources: 8 | Concepts: 24 | Connections: 14*
 
 ## Sources
 
@@ -12,6 +12,7 @@
 - [260403_snapshot-scaffolding-methodology](summaries/260403_snapshot-scaffolding-methodology.md) — Clean room 포팅 방법론: 3종 JSON 스냅샷 + 빈 패키지 자동 생성 + Parity Audit으로 진행률 자동 측정
 - [260409_graph-pollution-heterogeneous-corpus](summaries/260409_graph-pollution-heterogeneous-corpus.md) — Graph Pollution 문제 정의와 해결 전략: 4개 축(Chunking/Graph 계층/Saliency/Routing)으로 이기종 코퍼스 문제 해법 정리
 - [wikidocs_net_338204](summaries/wikidocs_net_338204.md) — Claude Code 소스 코드 분석서: TypeScript + React TUI + Zustand, 4단계 구조, 5가지 실행 모드, 쿼리 루프, 10단계 도구 파이프라인, 8가지 설계 패턴
+- [gist_github_com_karpathy-llm-wiki](summaries/gist_github_com_karpathy-llm-wiki.md) — Karpathy의 LLM Wiki 패턴: LLM이 점진적으로 구축·유지하는 개인 지식 위키, RAG 대안, Memex 비전의 현대적 실현
 
 ## Concepts
 
@@ -27,10 +28,14 @@
 - [heterogeneous-corpus](concepts/heterogeneous-corpus.md) — 성격이 다른 문서들이 한 KB에 공존하는 상황, 정보 밀도 편차의 원인
 - [hybrid-rag](concepts/hybrid-rag.md) — Retrieval/Source/Index Structure 세 층위의 하이브리드 RAG 분류
 - [ket-rag](concepts/ket-rag.md) — 풀 KG + 이분 그래프 이중 인덱스, PageRank 기반 중요도 선별
+- [knowledge-compilation](concepts/knowledge-compilation.md) — 소스 수집 시 지식을 사전 컴파일하여 위키에 상주시키는 방식, RAG의 질의 시 재도출과 대비
 - [lightrag](concepts/lightrag.md) — 단일 그래프 + 쿼리 시점 dual-level retrieval
 - [llm-cost-optimization](concepts/llm-cost-optimization.md) — 소형 특화 모델, 인프라 계층 분리, 파이프라인 자동화 결합 비용 절감
+- [llm-wiki](concepts/llm-wiki.md) — LLM이 점진적으로 구축·유지하는 개인 지식 위키 패턴 (Karpathy)
+- [memex](concepts/memex.md) — Vannevar Bush(1945)의 개인 지식 장치 구상, 연상적 경로 기반
 - [openai-codex](concepts/openai-codex.md) — Claude Code용 OpenAI Codex 플러그인
 - [parity-audit](concepts/parity-audit.md) — 포팅 프로젝트 진행률 자동 수치화
+- [personal-knowledge-base](concepts/personal-knowledge-base.md) — 시간에 걸쳐 축적하는 구조화된 개인 지식 저장소, 제텔카스텐에서 LLM 위키까지
 - [prompt-injection](concepts/prompt-injection.md) — 외부 컨텐츠로 LLM 에이전트를 하이재킹하는 공격
 - [rag-routing](concepts/rag-routing.md) — 문서 타입별 인덱스 분리 및 쿼리 시 라우팅 아키텍처
 - [raptor](concepts/raptor.md) — 재귀적 요약 트리 RAG, Collapsed Tree 검색, 계층은 생성 장치
@@ -46,12 +51,17 @@
 - [claude-code-plugin ↔ openai-codex](connections/claude-code-plugin--openai-codex.md) — 경쟁 제품 생태계에 자사 모델 통합 사례
 - [graph-pollution ↔ graphrag](connections/graph-pollution--graphrag.md) — GraphRAG가 이기종 코퍼스에서 필연적으로 부딪히는 오염 문제
 - [graph-pollution ↔ heterogeneous-corpus](connections/graph-pollution--heterogeneous-corpus.md) — 원인과 증상의 인과 관계
+- [graphrag ↔ llm-wiki](connections/graphrag--llm-wiki.md) — 대비되는 지식 구조화 전략 (그래프 인덱스 vs 컴파일된 위키)
 - [hybrid-rag ↔ ket-rag](connections/hybrid-rag--ket-rag.md) — Index Structure Hybrid의 가장 명확한 구현 사례
 - [ket-rag ↔ raptor](connections/ket-rag--raptor.md) — 서로 다른 철학의 계층화 (중요도 분리 vs 의미 재귀)
+- [knowledge-compilation ↔ hybrid-rag](connections/knowledge-compilation--hybrid-rag.md) — 사전 컴파일 vs 질의 시 하이브리드 검색
+- [llm-wiki ↔ personal-knowledge-base](connections/llm-wiki--personal-knowledge-base.md) — 패턴과 목적의 관계
+- [memex ↔ personal-knowledge-base](connections/memex--personal-knowledge-base.md) — 1945년 비전에서 현대 PKB까지의 계보
 - [parity-audit ↔ snapshot-scaffolding](connections/parity-audit--snapshot-scaffolding.md) — 구조 생성과 진행 검증의 보완 관계
 
 ## Recent Additions
 
+- 2026-04-13: Added gist_github_com_karpathy-llm-wiki (new concepts: llm-wiki, personal-knowledge-base, knowledge-compilation, memex)
 - 2026-04-09: Compiled 260409_graph-pollution-heterogeneous-corpus (new concepts: graph-pollution, heterogeneous-corpus, graphrag, raptor, ket-rag, lightrag, hybrid-rag, chunking-strategy, saliency-denoising, rag-routing)
 - 2026-04-07: Compiled wikidocs_net_338204
 - 2026-04-07: Compiled 260327_anthropic-claude-code-auto-mode-design
