@@ -1,11 +1,20 @@
 [
   {
+    "number": 29,
+    "title": "2026-04-15 (수)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] Agent Platform - KMS 구현 아이디어 정리\n\n\n### Review\n\n**오늘 한 일**\n-  Agent Platform - KMS 구현 아이디어 정리 후 브리핑\n- Agent Platform 설계 큰 틀 정리\n\n**내일 할 것**\n- 오늘 결정한 것 기반으로 요구사항 도출\n- 시나리오와 요구사항 간의 정합성 비교\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-04-15T09:35:45Z",
+    "updated_at": "2026-04-15T09:35:45Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/29"
+  },
+  {
     "number": 28,
     "title": "2026-04-07 (화)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] 개인 지식 저장소 Claude Code Plugin 만들기\n- [ ] Agent Platform 기획 우선 순위 확정\n- [ ] 휴니버스 리부트 계획\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] 개인 지식 저장소 Claude Code Plugin 만들기\n- [x] Agent Platform 기획 우선 순위 확정\n- [ ] 휴니버스 리부트 계획\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-04-07T01:20:10Z",
-    "updated_at": "2026-04-07T01:20:13Z",
+    "updated_at": "2026-04-15T09:31:04Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/28"
   },
   {
