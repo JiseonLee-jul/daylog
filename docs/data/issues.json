@@ -1,11 +1,20 @@
 [
   {
+    "number": 30,
+    "title": "2026-04-16 (목)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ]\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-04-16T01:13:24Z",
+    "updated_at": "2026-04-16T01:13:27Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/30"
+  },
+  {
     "number": 29,
     "title": "2026-04-15 (수)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] Agent Platform - KMS 구현 아이디어 정리\n\n\n### Review\n\n**오늘 한 일**\n-  Agent Platform - KMS 구현 아이디어 정리 후 브리핑\n- Agent Platform 설계 큰 틀 정리\n\n**내일 할 것**\n- 오늘 결정한 것 기반으로 요구사항 도출\n- 시나리오와 요구사항 간의 정합성 비교\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] Agent Platform - KMS 구현 아이디어 정리\n\n\n### Review\n\n**오늘 한 일**\n-  Agent Platform - KMS 구현 아이디어 정리 후 브리핑\n- Agent Platform 설계 큰 틀 정리\n\n**내일 할 것**\n- 오늘 결정한 것 기반으로 요구사항 도출\n  - 260414_kms-pipeline-full-design.md\n  - 260414_kms-pipeline-flow-diagram.md\n- 시나리오와 요구사항 간의 정합성 비교\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-04-15T09:35:45Z",
-    "updated_at": "2026-04-15T09:35:45Z",
+    "updated_at": "2026-04-15T09:43:56Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/29"
   },
   {
