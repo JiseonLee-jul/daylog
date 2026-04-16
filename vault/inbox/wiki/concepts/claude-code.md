@@ -35,15 +35,31 @@ Anthropic이 개발한 터미널 기반 코딩 에이전트. **TypeScript + Reac
 - **자동화 인프라**: `/loop`, `/schedule`로 최대 1주일 단위 반복 작업 자동화
 - **Auto Mode**: 트랜스크립트 분류기 기반 자율 실행 — 승인 피로 해결을 위한 2-레이어 방어 시스템 (→ [claude-code-auto-mode](claude-code-auto-mode.md))
 
+### 실전 행동 특성 (Opus 4.6, 100h 사용 관찰)
+
+- **속도/반응성**: 매우 빠르고 인터랙티브 — 짧은 루프에 강점
+- **구조적 약점**:
+  - `CLAUDE.md` 등 **지시 파일을 자주 무시**
+  - 근본 원인(root cause)보다 **증상 패치(hack/patch/helper)** 선호
+  - 작업을 **미완료 상태로 남기는 경향**
+  - 새 파일 생성보다 **기존 파일에 함수 추가**
+  - **과신(overconfidence)**: 틀린 분석도 확신 있게 제시
+  - 토큰 소진 속도가 빠름
+- **적합 용도**: rapid prototyping, 탐색, 초안 작성, 인터랙티브 작업
+- **부적합 용도**: 장시간 fire-and-forget 자율 작업
+
 ## Sources
 
 - [260327_anthropic-claude-code-auto-mode-design](../summaries/260327_anthropic-claude-code-auto-mode-design.md) — Auto Mode 설계
 - [260331_claude_code_hidden_features](../summaries/260331_claude_code_hidden_features.md) — 15가지 숨겨진 기능
 - [260331_openai_codex_plugin_for_claude_code](../summaries/260331_openai_codex_plugin_for_claude_code.md) — 플러그인 생태계 개방성
 - [wikidocs_net_338204](../summaries/wikidocs_net_338204.md) — 소스 코드 내부 아키텍처 분석
+- [260416_claude-code-vs-codex-comparison](../summaries/260416_claude-code-vs-codex-comparison.md) — Codex 대비 실전 행동 차이
 
 ## Related Concepts
 
 - [claude-code-architecture](claude-code-architecture.md) — 내부 구조 심층 분석
 - [claude-code-auto-mode](claude-code-auto-mode.md) — 자율 실행 모드 (4가지 권한 모드 중 하나)
 - [claude-code-plugin](claude-code-plugin.md) — 플러그인 시스템과 배포
+- [openai-codex](openai-codex.md) — 상호 보완 에이전트 (교차 검증 파트너)
+- [cross-validation-workflow](cross-validation-workflow.md) — Claude 초안 + Codex 리뷰 패턴
