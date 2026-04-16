@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>KMS 파이프라인 전체 흐름 — 커넥터부터 검색까지</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #fafafa;
+    --panel-2: #f5f5f5;
+    --border: #e0e0e0;
+    --border-strong: #bdbdbd;
+    --text: #333333;
+    --text-dim: #757575;
+    --text-mute: #9e9e9e;
+    --yellow: #f9c846;
+    --yellow-soft: #fff4d1;
+    --yellow-line: #e6b422;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 24px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', -apple-system, 'Malgun Gothic', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--yellow);
+  }
+  .meta {
+    color: var(--text-dim);
+    font-size: 12px;
+    margin-bottom: 32px;
+  }
+  .pipeline { max-width: 1000px; margin: 0 auto; }
+
+  .section-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin: 32px 0 16px;
+    letter-spacing: 3px;
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--panel-2);
+  }
+
+  .source-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--yellow);
+    border-radius: 4px;
+    padding: 14px 20px;
+    margin: 0 auto;
+    max-width: 420px;
+  }
+  .source-box h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .source-box ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+
+  .arrow {
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 18px;
+    margin: 4px 0;
+    line-height: 1;
+  }
+  .note {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-style: italic;
+    margin: 4px 0;
+  }
+
+  .stage {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin: 8px 0;
+    overflow: hidden;
+  }
+  .stage-header {
+    background: var(--yellow-soft);
+    border-bottom: 1px solid var(--yellow-line);
+    padding: 12px 20px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .stage-subtitle {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .stage-body { padding: 16px 22px; }
+  .stage-body ul { margin: 4px 0; padding-left: 20px; }
+  .stage-body li { margin: 5px 0; }
+
+  code {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--text);
+    font-family: 'Consolas', monospace;
+  }
+
+  .sub-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'Consolas', monospace;
+    line-height: 1.5;
+  }
+
+  .file-branches {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .file-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--yellow);
+    border-radius: 3px;
+    padding: 10px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .file-chip b {
+    display: block;
+    color: var(--text);
+    margin-bottom: 3px;
+    font-size: 12px;
+  }
+
+  .substep {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border-strong);
+    padding: 12px 16px;
+    margin: 10px 0;
+    border-radius: 3px;
+  }
+  .substep h4 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .progress {
+    display: inline-block;
+    background: var(--yellow-soft);
+    border: 1px solid var(--yellow-line);
+    color: var(--text);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    margin-top: 8px;
+  }
+
+  .star {
+    background: var(--yellow-soft);
+    border: 1px solid var(--yellow-line);
+    color: var(--text);
+    font-weight: 600;
+    text-align: center;
+    padding: 12px;
+    border-radius: 3px;
+    margin: 12px auto;
+    font-size: 14px;
+    max-width: 300px;
+  }
+
+  .external-systems {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .ext-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 18px;
+  }
+  .ext-card h4 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--yellow);
+  }
+  .ext-card ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .ext-card ul b { color: var(--text); }
+
+  .example-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 24px;
+    margin: 12px 0;
+  }
+  .example-box h3 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--yellow);
+  }
+  .example-box h4 {
+    margin: 12px 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .example-code {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 14px;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    white-space: pre-wrap;
+    line-height: 1.55;
+  }
+  .example-code b { color: var(--text); font-weight: 600; }
+
+  .feature-list {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 28px;
+  }
+  .feature-list ol li { margin: 8px 0; color: var(--text-dim); }
+  .feature-list ol li b { color: var(--text); }
+  .feature-list ol li ul { margin-top: 4px; }
+
+  .connector-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--yellow);
+    border-radius: 4px;
+    padding: 16px 22px;
+    margin: 8px 0;
+  }
+  .connector-box h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .connector-box ul { margin: 4px 0; padding-left: 20px; }
+  .connector-box li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="pipeline">
+
+<h1>KMS 파이프라인 전체 흐름 — 커넥터부터 검색까지</h1>
+<div class="meta">
+  작성일: 2026-04-14 · 성격: 입력 분해 → 파이프라인 → 그래프 등록 전체 흐름 시각화
+</div>
+
+<div class="source-box">
+  <h3>[외부 소스 이벤트]</h3>
+  <ul>
+    <li>Slack 메시지 + URL</li>
+    <li>이메일 + 첨부파일들</li>
+    <li>Confluence 페이지 수정</li>
+    <li>파일 업로드</li>
+    <li>...</li>
+  </ul>
+</div>
+<div class="arrow">▼</div>
+
+<div class="connector-box">
+  <h3>커넥터 / 어댑터 (KMS 밖)</h3>
+  <p style="margin: 0 0 10px; color: var(--text-dim); font-size: 12px;"><b style="color: var(--text);">책임:</b> 외부 이벤트를 KMS가 이해하는 단위로 분해</p>
+  <ul>
+    <li>소스 시스템의 API/형식을 이해</li>
+    <li><b>컨테이너 포맷 분해:</b>
+      <ul style="color: var(--text-dim);">
+        <li>이메일 → 본문 + 첨부N개</li>
+        <li>Slack 메시지 → 텍스트 + 첨부/공유 링크</li>
+        <li>ZIP/TAR → 내부 파일들</li>
+        <li>이메일 스레드 → 각 이메일</li>
+      </ul>
+    </li>
+    <li>관계 정보 수집 (parent_id 힌트)</li>
+    <li><b>메타데이터 준비:</b> actor_id, source_type, source_location, owner, domain, sensitivity 제안</li>
+  </ul>
+
+  <p style="margin: 12px 0 6px; color: var(--text); font-size: 12px;"><b>각 분해된 파일마다 <code>kms_ingest()</code> 호출</b></p>
+  <div class="sub-box">
+예시 (이메일 1통 + 첨부 2개):
+  kms_ingest(file=message.eml, parent_id=null)
+  kms_ingest(file=report.pdf,  parent_id={이메일 source_id})
+  kms_ingest(file=data.xlsx,   parent_id={이메일 source_id})
+  </div>
+</div>
+
+<div class="arrow">▼</div>
+<div class="note"><code>kms_ingest(file, parent_id, metadata)</code> · 분해된 개별 파일 N회 호출</div>
+<div class="arrow">▼</div>
+
+<div class="file-branches">
+  <div class="file-chip"><b>[파일 1]</b>본체</div>
+  <div class="file-chip"><b>[파일 2]</b>첨부</div>
+  <div class="file-chip"><b>[파일 3]</b>첨부</div>
+</div>
+<div class="note">각 파일이 독립 파이프라인</div>
+<div class="arrow">▼</div>
+
+<div class="section-title">KMS 파이프라인 (파일 1건 기준)</div>
+
+<div class="stage">
+  <div class="stage-header">Stage 1 &middot; Ingest (수집)</div>
+  <div class="stage-body">
+    <ul>
+      <li><b>원본 파일 저장</b> — <code>/ingests/{ingest_id}/{파일명}</code><br>
+        <span style="color: var(--text-mute);">(같이 들어온 파일은 동일 ingest_id 폴더)</span></li>
+      <li><b>SHA256 계산</b> (중복 감지)</li>
+      <li><b>source_record INSERT</b>
+        <div class="sub-box">
+source_id (새로 생성)
+ingest_id (커넥터가 넘겨줌)
+parent_id (커넥터가 넘겨줌, null 가능)
+raw_path, file_name, file_ext
+sha256, file_size
+actor_id, ingested_at
+source_type, source_location
+owner, domain, sensitivity
+processing_depth, requires_review
+status=active, progress=pending
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="arrow">▼</div>
+<div class="note">source_record 생성 완료</div>
+<div class="arrow">▼</div>
+
+<div class="stage">
+  <div class="stage-header">Stage 2 &middot; Parse (변환)</div>
+  <div class="stage-body">
+    <ul>
+      <li><b>파서 선택 (file_ext 기반)</b><br>
+        <span style="color: var(--text-mute);">.pdf → Docling / .docx → Docling / .mp3 → Whisper / .csv·.json → 구조화 파서 / .md → 통과</span></li>
+      <li><b>마크다운 변환</b> → body.md (임시)<br>
+        <code>/transformed/{ingest_id}/{source_id}/body.md</code></li>
+      <li><b>청킹</b> (문서 타입/구조/크기 기반)
+        <ul style="color: var(--text-dim);">
+          <li>코드 → AST / 표 → 행 / 채팅 → 스레드 / 산문 → 문장</li>
+          <li>heading 충분 → 구조적 / 부족 → 시맨틱 (경량 LLM)</li>
+          <li>&lt; 2K 토큰 → flat / ≥ 2K + 다단 → parent-child</li>
+        </ul>
+      </li>
+      <li><b>chunks 테이블 INSERT</b>
+        <div class="sub-box">
+chunk_id, source_id, order_index
+text, token_count, char_offset_*
+parent_chunk_id, chunk_type
+embedding=NULL (Index에서 채움)
+        </div>
+      </li>
+    </ul>
+    <span class="progress">progress: processing</span>
+  </div>
+</div>
+
+<div class="arrow">▼</div>
+<div class="note">body.md + chunks 준비 완료</div>
+<div class="arrow">▼</div>
+
+<div class="stage">
+  <div class="stage-header">Stage 3 &middot; Index (인덱싱)</div>
+  <div class="stage-body">
+
+    <div class="substep">
+      <h4>1. 검증 (동기, per-doc)</h4>
+      <ul>
+        <li>frontmatter schema, FK, chunk 트리</li>
+        <li>ACL 매칭, 링크 유효성</li>
+        <li><span style="color: var(--text-mute);">실패 → 그래프 미등록, progress=failed</span></li>
+      </ul>
+    </div>
+
+    <div class="substep">
+      <h4>2. 깊이별 처리</h4>
+      <ul>
+        <li><b>모든 depth:</b> L0 생성, chunk 임베딩, L0 임베딩</li>
+        <li><b>standard+:</b> L1 생성, L1 임베딩, entity 추출, 관계 엣지 (LightRAG)</li>
+        <li>chunks 테이블 UPDATE embedding=?</li>
+      </ul>
+    </div>
+
+    <div class="substep">
+      <h4>3. 그래프 등록 (트랜잭션)</h4>
+      <div class="sub-box">
+<b style="color: var(--text);">doc_nodes INSERT</b>
+  doc_id, source_id, title
+  l0_abstract, l0_embedding
+  l1_overview, l1_embedding
+  tags, language, content_path
+  review_status (pending if required)
+      </div>
+      <div class="sub-box">
+<b style="color: var(--text);">entity_nodes INSERT (standard+)</b>
+  canonical_name, entity_type, desc
+  (어댑터: LightRAG 결과 변환)
+      </div>
+      <div class="sub-box">
+<b style="color: var(--text);">edges INSERT</b>
+  part_of         (doc ↔ chunk)
+  mentions        (chunk ↔ entity)
+  related_to      (entity ↔ entity)
+  has_attachment  (parent_id 있을 때)
+      </div>
+    </div>
+
+    <div class="substep">
+      <h4>4. content.md 최종 저장</h4>
+      <ul>
+        <li><code>/transformed/{ingest_id}/{source_id}/content.md</code></li>
+        <li>frontmatter (Ingest+Parse+Index 메타 전부) + body</li>
+        <li>body.md 삭제 (옵션)</li>
+      </ul>
+    </div>
+
+    <div class="substep">
+      <h4>5. 후속 처리 큐 등록</h4>
+      <ul>
+        <li><b>deep</b> → synthesis 배치 큐 (Phase 2)</li>
+        <li><b>requires_review=true</b> → 사람 검증 큐</li>
+      </ul>
+    </div>
+
+    <span class="progress">progress: completed</span>
+  </div>
+</div>
+
+<div class="arrow">▼</div>
+<div class="star">★ 검색 가능 상태</div>
+
+<div class="section-title">파이프라인 밖 시스템</div>
+
+<div class="external-systems">
+  <div class="ext-card">
+    <h4>배치 스케줄러 (Celery beat)</h4>
+    <ul>
+      <li><b>일일:</b> stale 감지 (freshness 계산)</li>
+      <li><b>주간:</b> consolidation (entity 병합)</li>
+      <li><b>[Phase 2]:</b> synthesis, connection inference, cross-doc 검증</li>
+    </ul>
+  </div>
+  <div class="ext-card">
+    <h4>이벤트 핸들러 (Celery 이벤트 워커)</h4>
+    <ul>
+      <li><code>review_completed</code> → review_status 갱신</li>
+      <li><code>promotion_requested</code> → Stage 3 재실행</li>
+      <li><code>document_archived</code> → status=archived</li>
+      <li><code>document_deleted</code> → cascade 삭제</li>
+    </ul>
+  </div>
+  <div class="ext-card">
+    <h4>승인 큐 API</h4>
+    <ul>
+      <li>사람 검증 큐 (requires_review=true)</li>
+      <li>승격 승인 큐</li>
+    </ul>
+  </div>
+  <div class="ext-card">
+    <h4>검색 서비스 (FastAPI + MCP)</h4>
+    <ul>
+      <li><code>kms_search</code>, <code>kms_get</code>, <code>kms_graph</code></li>
+      <li>DB 조회만 (파이프라인과 독립)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section-title">커넥터 예시 — 이메일 + 첨부</div>
+<div class="example-box">
+  <h4>입력 이벤트</h4>
+  <div class="example-code">From:        jiseon@company.com
+Subject:     간식 카탈로그 공유
+Body:        "새 업체 찾았어요. 참고해주세요."
+Attachments: [catalog.pdf, pricing.xlsx]</div>
+
+  <h4>이메일 커넥터 동작</h4>
+  <div class="example-code"><b>ingest_id = uuid()</b>  (이 이벤트 전체의 ID)
+
+<b>분해:</b>
+  1) 이메일 본문 텍스트
+     kms_ingest(
+       content="새 업체 찾았어요...",
+       file_ext="eml",
+       ingest_id=ingest_id,
+       parent_id=null,
+       metadata={...}
+     ) → source_id=src_001
+
+  2) catalog.pdf 첨부
+     kms_ingest(
+       file=catalog.pdf,
+       ingest_id=ingest_id,
+       parent_id=src_001,
+       metadata={...}
+     ) → source_id=src_002
+
+  3) pricing.xlsx 첨부
+     kms_ingest(
+       file=pricing.xlsx,
+       ingest_id=ingest_id,
+       parent_id=src_001,
+       metadata={...}
+     ) → source_id=src_003</div>
+
+  <h4>저장 결과</h4>
+  <div class="example-code"><b>/ingests/{ingest_id}/</b>
+  message.eml
+  catalog.pdf
+  pricing.xlsx
+
+<b>/transformed/{ingest_id}/</b>
+  {src_001}/content.md    (이메일 본문)
+  {src_002}/content.md    (PDF 카탈로그)
+  {src_003}/content.md    (Excel 가격표)
+
+<b>source_records:</b>
+  src_001 (parent_id=null)
+  src_002 (parent_id=src_001)
+  src_003 (parent_id=src_001)
+
+<b>Graph:</b>
+  doc_node(src_001) ──has_attachment──> doc_node(src_002)
+                    ──has_attachment──> doc_node(src_003)
+
+  각 doc_node 하위:
+    chunk_nodes
+    entity_node mentions</div>
+</div>
+
+<div class="section-title">커넥터 예시 — Slack 메시지 + URL</div>
+<div class="example-box">
+  <h4>입력 이벤트</h4>
+  <div class="example-code">Channel: #dev-ops
+User:    admin
+Message: "PostgreSQL vacuum 관련 좋은 글.
+          https://blog.example.com/vacuum"</div>
+
+  <h4>Slack 커넥터 동작</h4>
+  <div class="example-code"><b>ingest_id = uuid()</b>
+
+<b>분해:</b>
+  1) 메시지 텍스트 (URL 포함)
+     kms_ingest(
+       content="PostgreSQL vacuum 관련 좋은 글...",
+       ingest_id=ingest_id,
+       parent_id=null,
+       source_type="slack",
+       source_location="#dev-ops"
+     ) → src_010
+
+  2) URL 콘텐츠 (별도 fetch)
+     kms_ingest(
+       url="https://blog.example.com/vacuum",
+       ingest_id=ingest_id,
+       parent_id=src_010,       ← 메시지가 parent
+       source_type="web"
+     ) → src_011</div>
+
+  <p style="margin: 10px 0 0; color: var(--text-dim); font-size: 12px; font-style: italic;">
+    커넥터가 URL을 자동 fetch하고 별도 source_record로 등록.<br>
+    "메시지가 URL을 공유했다"는 관계는 <code>has_attachment</code> (또는 <code>references</code>) 엣지로.
+  </p>
+</div>
+
+</div>
+</body>
+</html>
