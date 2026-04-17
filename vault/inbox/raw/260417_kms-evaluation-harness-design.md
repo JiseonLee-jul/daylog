@@ -242,21 +242,26 @@ LLMComponent는 `_llm_call()` 래퍼를 제공하여 LLM 호출마다 **자식 s
 
 ## 4.3 컴포넌트별 입출력 계약
 
-필드는 변동 가능하므로, **각 컴포넌트가 무엇을 받아 무엇을 내보내는지**의 구조만 확정한다.
+필드 정의는 변동 가능하므로, **각 컴포넌트가 무엇을 받아 무엇을 만들고 어디에 남기는가** 수준만 확정한다.
 
-| 컴포넌트 | 입력 | 출력 | 저장소 |
-|---|---|---|---|
-| **FileStore** | file (bytes), metadata | raw_path, sha256, file_size | S3 |
-| **DedupChecker** | sha256 | is_duplicate, existing_id | PostgreSQL 조회 |
-| **DepthResolver** | metadata, rules | processing_depth, requires_review | 규칙 엔진 |
-| **Parser** | raw_path, file_ext | body_md, parse_meta | S3 (body.md) |
-| **Chunker** | body_md, parse_meta | chunks[] | PostgreSQL |
-| **PreValidator** | source_record, chunks | is_valid, errors[] | — (read-only) |
-| **Summarizer** | body_md, token_count, depth | l0_abstract, l1_overview | Graph DB |
-| **Embedder** | texts[] | embeddings[] | PostgreSQL |
-| **EntityExtractor** | body_md, chunks | entities[], relations[] | Graph DB |
-| **PostValidator** | embeddings, entities, relations | is_valid, errors[] | — (read-only) |
-| **GraphRegistrar** | 위 전부 | node_ids[], edge_ids[] | Graph DB |
+**Stage 1 (보관)**
+- **FileStore** — 원본 파일을 받아 그대로 저장한다. SHA256을 계산한다. → S3
+- **DedupChecker** — SHA256으로 이미 처리된 파일인지 판별한다. → PostgreSQL 조회
+- **DepthResolver** — 메타데이터와 규칙으로 processing_depth, requires_review를 결정한다. 파일 내용을 읽지 않는다.
+
+**Stage 2 (읽기)**
+- **Parser** — 원본 파일을 마크다운으로 변환한다. 파일 형식에 따라 파서를 선택한다 (Docling, Whisper 등). → S3 (body.md)
+- **Chunker** — 마크다운을 의미 단위 청크로 분할한다. 문서 타입·구조·크기에 따라 전략을 결정한다. → PostgreSQL (chunks)
+
+**Stage 3 (이해)**
+- **PreValidator** — 청크 구조, FK 정합성 등 입력 무결성을 검증한다. 비싼 연산 전 관문. 데이터를 수정하지 않는다.
+- **Summarizer*** — 마크다운으로부터 L0/L1 요약을 생성한다. LLM 호출. → Graph DB
+- **Embedder** — 텍스트를 벡터로 변환한다. → PostgreSQL (chunks.embedding)
+- **EntityExtractor*** — 마크다운과 청크로부터 entity와 relation을 추출한다. LLM 호출. → Graph DB
+- **PostValidator** — 임베딩 차원, entity 참조 유효성 등 출력 정합성을 검증한다. 등록 전 관문.
+- **GraphRegistrar** — 위 산출물 전체를 그래프 DB에 트랜잭션 단위로 등록한다. → Graph DB
+
+\* = LLMComponent 상속 (gen_ai.* 속성 자동 기록)
 
 ## 4.4 Celery Task와의 관계
 
@@ -275,6 +280,54 @@ def parse_task(self, source_id: str):
     source_record = load_source_record(source_id)
     return _parser(source_record)
 ```
+
+## 4.5 파이프라인 오케스트레이션
+
+컴포넌트를 **어떤 순서로 호출하는가**를 정의하는 계층. 이 호출 구조가 OTel span 트리의 형태를 결정한다.
+
+```python
+def kms_ingest(source_record):
+    with tracer.start_as_current_span("kms_ingest"):  # 최상위 span
+        stored = file_store(source_record)
+        if dedup_checker(stored).is_duplicate:
+            return
+        depth = depth_resolver(stored)
+
+        parsed = parser(stored)
+        chunks = chunker(parsed)
+
+        pre_validator(chunks)
+
+        # 병렬 실행
+        summary = summarizer(chunks)
+        embeddings = embedder(chunks)
+        entities = entity_extractor(chunks)
+
+        post_validator(summary, embeddings, entities)
+        graph_registrar(summary, embeddings, entities)
+```
+
+이 코드가 만드는 **span 트리**:
+
+```
+kms_ingest                          ← 오케스트레이션이 만드는 최상위
+  ├── file_store                    ← 각 Component.__call__이 만드는 자식
+  ├── dedup_checker
+  ├── depth_resolver
+  ├── parser
+  ├── chunker
+  ├── pre_validator
+  ├── summarizer                    ← LLMComponent
+  │     ├── llm_call (L0)           ← _llm_call이 만드는 손자
+  │     └── llm_call (L1)
+  ├── embedder
+  ├── entity_extractor              ← LLMComponent
+  │     └── llm_call
+  ├── post_validator
+  └── graph_registrar
+```
+
+span 트리는 OTel이 강제하는 것이 아니라, **`start_as_current_span`의 중첩 위치**로 우리가 설계하는 것이다. 오케스트레이션 코드가 호출 순서를 바꾸면 트리도 바뀐다.
 
 ---
 
