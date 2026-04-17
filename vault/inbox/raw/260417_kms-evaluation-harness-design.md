@@ -823,6 +823,8 @@ CeleryInstrumentor().instrument()
 - CI/CD 도구 선정 및 연동 (GitHub Workflow 등)
 - Golden 관리 체계 (작성→리뷰→승인, 메타데이터, 갱신 트리거)
 - 비용 제어 (평가 실행당 budget cap, LLM-judge 샘플링 전략)
+- 통합 인터페이스 (CLI 외 진입점: 대시보드 UI, Claude Code, Slack bot 등 — EvalService API 기반)
+- 다인 개발 환경 대응 (평가 이력 격리, Golden 동시 수정 관리, 공유 baseline 정책)
 
 **파이프라인 연동**
 - 병렬 실행 구간 실패 정책 (all-or-nothing vs partial)
