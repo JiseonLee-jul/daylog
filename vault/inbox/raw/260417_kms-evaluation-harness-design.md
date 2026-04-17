@@ -45,10 +45,12 @@
           ▲       ▲       ▲       ▲
           │       │       │       │       수평축 (횡단 인프라)
       ┌───┴───┬───┴───┬───┴───┬───┴───┐
-      │ OTel  │Celery │Shared │ Trace │  모든 계층을 관통하는
-      │Traces │Workers│Storage│Context│  횡단 관심사
+      │ OTel  │Shared │Celery │ Trace │
+      │Traces │Storage│Workers│Context│
       │+Metrics│      │       │       │
-      └───────┴───────┴───────┴───────┘
+      ├───────┴───────┼───────┴───────┤
+      │ L1 + L2 횡단   │   L1 전용     │
+      └───────────────┴───────────────┘
 ```
 
 ### 수직축: 논리 계층
@@ -61,12 +63,15 @@
 
 ### 수평축: 횡단 인프라
 
-특정 계층에 속하지 않고, 모든 계층을 관통하는 공유 인프라.
+횡단 범위에 따라 두 그룹으로 나뉜다.
 
+**L1 + L2 횡단:**
 - **OpenTelemetry** — L1은 실행 흔적(Traces)을, L2는 평가 결과(Metrics)를 OTel로 방출. 벤더 중립 OTLP 프로토콜로 어떤 백엔드든 수신 가능.
-- **Task Queue** — 파이프라인의 분산 실행 (Celery + Broker)
-- **Shared Storage** — 분산 워커 간 artifact 공유 (S3/MinIO)
-- **Trace Propagation** — 프로세스 경계를 넘는 trace 연결 (CeleryInstrumentor)
+- **Shared Storage** — L1이 artifact를 저장하고, L2가 이를 조회. 별도 평가 저장소 없음. (S3/MinIO)
+
+**L1 전용:**
+- **Task Queue** — 파이프라인 워커의 분산 실행 (Celery + Broker). 평가 워커는 Celery에 종속되지 않는다.
+- **Trace Propagation** — 파이프라인 워커 간 프로세스 경계에서 trace를 연결 (CeleryInstrumentor). 평가 워커는 별도 trace로 실행되므로 해당 없음.
 
 ---
 
@@ -638,7 +643,7 @@ kms/eval/
     otel_logger.py                   # 평가 결과를 OTel Metrics로 방출 (L2 계측 지점)
 ```
 
-## 7.2 Celery (Task Queue + Trace Propagation)
+## 7.2 Celery (L1 파이프라인 분산 실행)
 
 ### Component / Task 분리
 
@@ -663,18 +668,18 @@ def parse_task(self, source_id: str):
 분산:   parse_task.delay(source_id)      ← Celery가 워커 배정, 내부에서 같은 Component 호출
 ```
 
-파이프라인 실행은 Celery 워커에서 분산. 평가 실행(L2)은 별도 프로세스에서 일괄 수행.
+Celery는 **L1 파이프라인 워커의 분산 실행 인프라**다. 평가 워커(L2)는 Celery에 종속되지 않으며, 단순 스크립트/CI job/cron 등 어떤 방식으로든 실행 가능하다.
 
-### Trace Propagation
+### Trace Propagation (L1 내부 문제)
 
-Celery 워커는 별도 프로세스이므로 메모리를 공유하지 않는다. 그대로 두면 **워커가 만든 span이 원래 trace에 연결되지 않아** 파이프라인 전체를 하나의 trace로 볼 수 없다.
-
-`CeleryInstrumentor`가 이 문제를 해결한다: task 전송 시 trace context를 메시지 헤더에 자동 삽입하고, 워커가 수신 시 헤더에서 꺼내 부모 span으로 연결한다.
+파이프라인 워커 간 프로세스 경계에서 trace가 끊기는 문제. `CeleryInstrumentor`가 task 메시지 헤더에 trace context를 자동 삽입하여 해결한다.
 
 ```python
 # platform/shared/observability/telemetry.py 초기화 시 한 줄
 CeleryInstrumentor().instrument()
 ```
+
+평가 워커는 파이프라인 trace를 이어받지 않는다. 과거 trace를 **API로 조회**할 뿐이므로 Trace Propagation과 무관하다.
 
 ## 7.3 Shared Storage
 
