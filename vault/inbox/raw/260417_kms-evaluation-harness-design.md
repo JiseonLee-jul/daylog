@@ -747,14 +747,22 @@ CeleryInstrumentor().instrument()
 
 > 단일 프로세스와 분산 환경 모두에서 일관 동작한다.
 
-**가능한 이유**: 파이프라인 로직(Component)이 **실행 환경을 모르기** 때문이다. Component는 로컬에서 직접 호출해도, Celery 워커에서 호출해도 동일하게 동작한다. 환경 차이는 Component 바깥의 횡단 인프라가 흡수한다.
+**가능한 이유**: 파이프라인 워커(L1)와 평가 워커(L2)가 **애초에 별도 프로세스**이며, 각각이 실행 환경을 모르는 구조이기 때문이다.
+
+**L1 파이프라인 — Celery로 분산, Component는 환경을 모름:**
 
 | 설계 결정 | 왜 이것이 분산 대응을 가능하게 하는가 |
 |---|---|
-| **Component / Task 분리** (4장) | Component는 입력을 받아 출력을 반환하는 순수 로직이다. Celery task는 "어떤 워커에서 이 Component를 호출할지"만 결정하는 얇은 래퍼. 로컬 테스트에서는 task 없이 Component를 직접 호출하면 된다. |
-| **CeleryInstrumentor** (7장) | Celery 메시지 헤더에 trace context를 자동 삽입한다. 워커가 다른 프로세스여도 span이 부모-자식으로 연결되므로, 분산 환경에서도 하나의 trace로 전체 파이프라인을 추적할 수 있다. |
-| **Shared Storage** (7장) | 워커 A가 저장한 artifact를 워커 B(또는 Evaluator)가 읽을 수 있다. NFS나 S3를 쓰면 "어느 워커가 저장했는지"는 투명해진다. |
-| **Loader 추상화** (5장) | 로컬에서는 `InMemorySpanLoader`, 분산에서는 `OTLPSpanLoader`. Evaluator 코드는 동일. 환경 차이가 Loader 한 곳에 캡슐화된다. |
+| **Component / Task 분리** (7장) | Component는 입력을 받아 출력을 반환하는 순수 로직이다. Celery task는 "어떤 워커에서 이 Component를 호출할지"만 결정하는 얇은 래퍼. 로컬에서는 task 없이 Component를 직접 호출하면 된다. |
+| **CeleryInstrumentor** (7장) | 파이프라인 워커 간 프로세스 경계에서 trace context를 자동 전파한다. 분산 환경에서도 하나의 trace로 전체 파이프라인을 추적할 수 있다. 이 문제는 L1 내부에 한정된다. |
+
+**L2 평가 — Celery와 무관, API 조회로 데이터 접근:**
+
+| 설계 결정 | 왜 이것이 분산 대응을 가능하게 하는가 |
+|---|---|
+| **Observe First, Evaluate Async** (3장) | 파이프라인이 artifact + traces를 남기고 완료하면, 평가 워커가 별도 프로세스에서 비동기로 실행된다. 파이프라인 trace를 이어받는 것이 아니라 과거 trace를 API로 조회할 뿐이므로 Trace Propagation 문제가 발생하지 않는다. |
+| **Loader 추상화** (5장) | 로컬에서는 `InMemorySpanLoader`, 분산에서는 `APISpanLoader`. Evaluator 코드는 동일. 환경 차이가 Loader 한 곳에 캡슐화된다. |
+| **Shared Storage** (7장) | 파이프라인 워커가 저장한 artifact를 평가 워커가 S3/DB에서 읽는다. "어느 워커가 저장했는지"는 투명하다. |
 
 ---
 
