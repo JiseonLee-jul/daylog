@@ -218,16 +218,27 @@ class Component(ABC, Generic[TInput, TOutput]):
     def _run(self, input: TInput) -> TOutput: ...
 ```
 
-LLM 호출이 있는 컴포넌트(Summarizer, EntityExtractor)는 `LLMComponent`를 상속하여 `gen_ai.*` 속성을 자동 기록.
+### Component vs LLMComponent
+
+LLM 호출이 있는 컴포넌트는 `LLMComponent`를 상속한다. 차이는 **span에 기록되는 속성**과 그로 인해 **평가 가능한 차원**이 달라지는 것이다.
 
 ```
 Component (계측 + 에러처리)
   ├── Parser, Chunker, Embedder, Validators, GraphRegistrar
   │
-  └── LLMComponent (GenAI 속성 추가)
+  └── LLMComponent (Component 상속 + GenAI 계측 추가)
         ├── Summarizer
         └── EntityExtractor
 ```
+
+| | Component | LLMComponent |
+|---|---|---|
+| **span 속성** | `kms.*` | `kms.*` + `gen_ai.*` |
+| **추가 기록** | — | 모델명, 토큰 수, 비용 |
+| **OTLP 수신 도구** | 일반 span으로 표시 | `gen_ai.*`를 인식하여 LLM 호출로 해석 |
+| **평가 가능 차원** | 지연시간, 성공/실패 | + LLM 비용, 토큰 사용량 |
+
+LLMComponent는 `_llm_call()` 래퍼를 제공하여 LLM 호출마다 **자식 span**을 자동 생성한다. Summarizer가 L0/L1 요약을 각각 호출하면 자식 span이 2개 붙는다.
 
 ## 4.3 컴포넌트별 입출력 계약
 
