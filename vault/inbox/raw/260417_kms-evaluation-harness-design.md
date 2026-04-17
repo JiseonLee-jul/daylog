@@ -168,25 +168,29 @@
 
 ## 4.1 컴포넌트 맵
 
-```
-Stage 1 (Ingest)        Stage 2 (Parse)        Stage 3 (Index)
-보관                     읽기                    이해
+모든 컴포넌트는 **Component Base Class**를 상속한다. `__call__`이 OTel 계측을 은닉하고, 서브클래스는 `_run()`만 구현한다. LLM 호출 컴포넌트(*)는 `LLMComponent`를 상속하여 `gen_ai.*` 속성을 자동 기록.
 
-FileStore               Parser                 PreValidator
-  원본 파일 저장            파일 → 마크다운 변환      입력 무결성 검증 (비싼 연산 전 관문)
-                                                  │
-DedupChecker            Chunker                  ▼
-  SHA256 중복 감지          마크다운 → 청크 분할     Summarizer ─┐
-                                                 Embedder    ├ 병렬
-DepthResolver                                    EntityExt. ─┘
-  depth/review 결정                                │
-                                                  ▼
-                                                PostValidator
-                                                  출력 정합성 검증 (등록 전 관문)
-                                                  │
-                                                  ▼
-                                                GraphRegistrar
-                                                  그래프 DB 등록 (트랜잭션)
+```
+ Stage 1 (보관) ────────▶ Stage 2 (읽기) ────────▶ Stage 3 (이해)
+┌──────────────┐        ┌──────────────┐        ┌──────────────────┐
+│              │        │              │        │                  │
+│ FileStore     │        │ Parser       │        │ PreValidator     │
+│  원본 파일 저장 │        │  파일→마크다운  │        │  입력 무결성 검증  │
+│              │        │              │        │   │              │
+│ DedupChecker  │        │ Chunker      │        │   ▼              │
+│  SHA256 중복   │        │  마크다운→청크  │        │ Summarizer*  ─┐  │
+│              │        │              │        │ Embedder      ├병렬│
+│ DepthResolver │        │              │        │ EntityExt.*  ─┘  │
+│  depth/review │        │              │        │   │              │
+│              │        │              │        │   ▼              │
+│              │        │              │        │ PostValidator    │
+│              │        │              │        │  출력 정합성 검증  │
+│              │        │              │        │   │              │
+│              │        │              │        │   ▼              │
+│              │        │              │        │ GraphRegistrar   │
+│              │        │              │        │  그래프 DB 등록    │
+│              │        │              │        │                  │
+└──────────────┘        └──────────────┘        └──────────────────┘
 ```
 
 **안정적인 것**: 이 컴포넌트 분해와 흐름 방향. 새 Stage가 추가되지 않는 한 유지.
