@@ -105,58 +105,59 @@
 
               ┌────────────────┴────────────────┐
               │ ① artifact 경로                  │ ② span 경로
+              │ (평가 워커가 읽는 유일한 소스)      │ (대시보드 전용, 꺼내오지 않음)
               ▼                                  ▼
  ┌──────────────────────────┐    ┌──────────────────────────┐
- │  Artifact 저장             │    │  OTel Traces 방출         │
+ │  Artifact + 실행 메타 저장  │    │  OTel Traces 방출         │
  │  (파이프라인 기존 저장소)    │    │  (Base Class가 자동 계측)  │
  │                          │    │                          │
- │  S3/NFS:   body.md       │    │  artifact 경로를           │
- │  Postgres: chunks        │    │  span 속성에 기록          │
- │  GraphDB:  nodes, edges  │    │                          │
- └────────────┬─────────────┘    └────────────┬─────────────┘
-              │                                │
-              │                           OTLP ──→ 백엔드
-              │                                    (벤더 무관)
-              │                                │
-              └──────────────┬─────────────────┘
-                             │
-                     파이프라인 워커 완료
-                     (여기서 L1 프로세스 끝)
-                             │
-─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
-                             │ 비동기 트리거
-                             │ (task chain / 스케줄 / 수동)
-                             ▼
+ │  S3/NFS:   body.md       │    │  OTLP ──→ 백엔드          │
+ │  Postgres: chunks        │    │  (Langfuse, Grafana 등)   │
+ │  GraphDB:  nodes, edges  │    │  시각화/모니터링 용도       │
+ │  + 소요시간, 토큰 수 등     │    │                          │
+ └────────────┬─────────────┘    └──────────────────────────┘
+              │
+              │
+      파이프라인 워커 완료
+      (여기서 L1 프로세스 끝)
+              │
+─ ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+              │ 비동기 트리거
+              │ (task chain / 스케줄 / 수동)
+              ▼
 ═══════════════════════════════════════════════════════════════════
  L2  Evaluation Harness (평가 워커, 별도 프로세스)
 ═══════════════════════════════════════════════════════════════════
 
-   ① artifact              ② span                golden/
-   S3/DB/GraphDB에서        OTLP 백엔드 API로       (레퍼런스)
-   ID로 조회                trace_id로 조회
-        │                        │                    │
-        ▼                        ▼                    ▼
-   ArtifactLoader           APISpanLoader        GoldenLoader
-        │                        │                    │
-        └────────────────────────┼────────────────────┘
-                                 │
-                                 ▼
-                         Evaluator (YAML + Registry)
-                         ┌───────┴────────┐
-                         ▼                ▼
-                   결과물 품질         실행 품질
-                   ParserEval         LatencyEval
-                   ChunkerEval        CostEval
-                   EntityEval
-                   GraphEval
-                         └───────┬────────┘
-                                 │
-                                 ▼
-                         Group 집계 (YAML)
-                                 │
-                                 ▼
-                         OTel Metrics 방출  ──→ OTLP ──→ 백엔드
-                         (평가 결과도 벤더 중립)
+   ① artifact + 실행 메타       golden/
+   S3/DB/GraphDB에서             (레퍼런스)
+   ID로 조회
+        │                            │
+        ▼                            ▼
+   ArtifactLoader               GoldenLoader
+        │                            │
+        └────────────┬───────────────┘
+                     │
+                     ▼
+             Evaluator (YAML + Registry)
+             ┌───────┴────────┐
+             ▼                ▼
+       결과물 품질         실행 품질
+       ParserEval         LatencyEval
+       ChunkerEval        CostEval
+       EntityEval
+       GraphEval
+             └───────┬────────┘
+                     │
+                     ▼
+             Group 집계 (YAML)
+                     │
+                     ▼
+             Comparator (회귀 판정)
+                     │
+                     ▼
+             OTel Metrics 방출  ──→ OTLP ──→ 백엔드
+             (평가 결과도 벤더 중립)
 
 ═══════════════════════════════════════════════════════════════════
  L3  Continuous Evaluation
@@ -172,10 +173,10 @@
                배포 차단
 ```
 
-**Observe First, Evaluate Async**: L1 파이프라인 워커는 artifact 저장 + OTel Traces 방출만 하고 즉시 완료한다. L2 평가 워커는 **별도 프로세스**에서 비동기로 실행되며, artifact와 span을 ID 기반 API 조회로 수집한다.
-**두 경로의 분기**: Component의 `__call__`이 실행되면 ① 결과물은 기존 저장소에, ② 실행 흔적은 OTel Traces로 **동시에** 나간다.
-**OTel의 벤더 중립 원칙**: L1은 Traces를, L2는 Metrics를 OTel로 방출한다. 방출은 OTLP로 벤더 중립이다. 단, 평가 워커가 span을 조회할 때는 백엔드 고유 API를 사용하며, 이 종속성은 SpanLoader 추상화가 캡슐화한다.
-**OTLP 백엔드의 3가지 역할**: ① L1 trace의 싱크(sink) ② L2가 span을 조회하는 소스(source) ③ L2 평가 결과의 싱크(sink).
+**Observe First, Evaluate Async**: L1 파이프라인 워커는 artifact(+실행 메타) 저장 + OTel Traces 방출만 하고 즉시 완료한다. L2 평가 워커는 **별도 프로세스**에서 비동기로 실행되며, artifact를 S3/DB에서 직접 읽는다. span을 백엔드에서 꺼내오지 않는다.
+**두 경로의 분기**: Component의 `__call__`이 실행되면 ① artifact + 실행 메타는 기존 저장소에, ② 실행 흔적은 OTel Traces로 **동시에** 나간다. ①은 평가 워커가 읽는 유일한 소스이고, ②는 대시보드 시각화 전용이다.
+**OTel의 역할**: L1은 Traces를, L2는 Metrics를 OTLP로 방출한다. 방출 전용이며 조회하지 않으므로, 벤더 종속이 발생하지 않는다.
+**OTLP 백엔드의 역할**: ① L1 trace의 싱크(sink, 대시보드 시각화) ② L2 평가 결과의 싱크(sink, 메트릭 이력).
 
 ---
 
@@ -355,9 +356,9 @@ kms/eval/
     chunker.py
     entity_extractor.py
     graph_structure.py
-                          실행 품질
-    span_latency.py
-    span_cost.py
+                          실행 품질 (artifact 실행 메타 기반)
+    latency.py
+    cost.py
 
   metrics/
     chrf_plus.py            @register_metric("chrf_plus")
@@ -369,8 +370,7 @@ kms/eval/
     token_cost.py
 
   loaders/
-    artifact_loader.py      ArtifactLoader 추상 + S3/Local 구현
-    span_loader.py          SpanLoader 추상 + InMemory/API 구현
+    artifact_loader.py      ArtifactLoader 추상 + S3/Local 구현 (실행 메타 포함)
     golden_loader.py        GoldenLoader (golden/ 디렉토리에서 읽기)
 
   comparator/
@@ -397,7 +397,7 @@ kms/eval/
 하나의 평가가 실행될 때 거치는 5개 계층. 각 계층은 독립적으로 교체 가능.
 
 ```
-① DATA          golden/, artifact(S3/DB), span(OTLP 백엔드/InMemory)
+① DATA          golden/, artifact + 실행 메타(S3/DB)
      │
      ▼
 ② PREPROCESS    artifact 정규화 (BOM, whitespace)
