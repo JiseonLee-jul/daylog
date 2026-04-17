@@ -536,7 +536,7 @@ python -m kms.eval.run --evaluator parser_pdf
 
 # CI (GitHub Actions)
 python -m kms.eval.run --group ci_smoke
-python -m kms_eval.check_regression --baseline main
+python -m kms.eval.check_regression --baseline main
 
 # Nightly (cron)
 python -m kms.eval.run --group full_pipeline
