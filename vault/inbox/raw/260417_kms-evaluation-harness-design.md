@@ -76,7 +76,7 @@
 
 ```
 ═══════════════════════════════════════════════════════════════════
- L1  Pipeline
+ L1  Pipeline (파이프라인 워커)
 ═══════════════════════════════════════════════════════════════════
 
  [Seed Corpus]
@@ -108,46 +108,54 @@
  │  GraphDB:  nodes, edges  │    │                          │
  └────────────┬─────────────┘    └────────────┬─────────────┘
               │                                │
-              │                           OTLP ──→ 어디든
-              │                           (Langfuse, MLflow,
-              │                            Grafana, File 등)
+              │                           OTLP ──→ 백엔드
+              │                                    (벤더 무관)
               │                                │
-═══════════════╪════════════════════════════════╪═══════════════
- L2  Evaluation Harness                        │
-═══════════════╪════════════════════════════════╪═══════════════
-              │                                │
-   ① artifact │                     ② span ────┘    golden/
-   (S3/DB/    │                     (File/OTLP)      (레퍼런스)
-    GraphDB)  │                          │               │
-        │     │                          │               │
-        ▼                                ▼               ▼
-   ArtifactLoader                   SpanLoader      GoldenLoader
-        │                                │               │
-        └────────────────────────────────┼───────────────┘
-                                         │
-                                         ▼
-                                 Evaluator (YAML + Registry)
-                                 ┌───────┴────────┐
-                                 ▼                ▼
-                           결과물 품질         실행 품질
-                           ParserEval         LatencyEval
-                           ChunkerEval        CostEval
-                           EntityEval
-                           GraphEval
-                                 └───────┬────────┘
-                                         │
-                                         ▼
-                                 Group 집계 (YAML)
-                                         │
-                                         ▼
-                                 OTel Metrics 방출  ──→ OTLP ──→ 어디든
-                                 (평가 결과도 벤더 중립)
+              └──────────────┬─────────────────┘
+                             │
+                     파이프라인 워커 완료
+                     (여기서 L1 프로세스 끝)
+                             │
+─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+                             │ 비동기 트리거
+                             │ (task chain / 스케줄 / 수동)
+                             ▼
+═══════════════════════════════════════════════════════════════════
+ L2  Evaluation Harness (평가 워커, 별도 프로세스)
+═══════════════════════════════════════════════════════════════════
+
+   ① artifact              ② span                golden/
+   S3/DB/GraphDB에서        OTLP 백엔드 API로       (레퍼런스)
+   ID로 조회                trace_id로 조회
+        │                        │                    │
+        ▼                        ▼                    ▼
+   ArtifactLoader           APISpanLoader        GoldenLoader
+        │                        │                    │
+        └────────────────────────┼────────────────────┘
+                                 │
+                                 ▼
+                         Evaluator (YAML + Registry)
+                         ┌───────┴────────┐
+                         ▼                ▼
+                   결과물 품질         실행 품질
+                   ParserEval         LatencyEval
+                   ChunkerEval        CostEval
+                   EntityEval
+                   GraphEval
+                         └───────┬────────┘
+                                 │
+                                 ▼
+                         Group 집계 (YAML)
+                                 │
+                                 ▼
+                         OTel Metrics 방출  ──→ OTLP ──→ 백엔드
+                         (평가 결과도 벤더 중립)
 
 ═══════════════════════════════════════════════════════════════════
  L3  Continuous Evaluation
 ═══════════════════════════════════════════════════════════════════
 
-              동일한 L2를 다른 트리거로 실행
+       L2 평가 워커를 언제, 어떤 범위로 트리거하는가
 
       Local ───── CI ───── Nightly ───── Shadow
       (수동)     (PR)     (스케줄)     (프로덕션 샘플링
@@ -157,10 +165,10 @@
                배포 차단
 ```
 
-**두 경로의 분기**: Component의 `__call__`이 실행되면 ① 결과물은 기존 저장소에, ② 실행 흔적은 OTel Traces로 **동시에** 나간다. 순차가 아닌 병렬이며, 서로 독립적이다.
-**OTel의 벤더 중립 원칙**: L1은 Traces를, L2는 Metrics를 OTel로 방출한다. 둘 다 OTLP 프로토콜로 내보내므로, 수신 백엔드(Langfuse, MLflow, Grafana 등)를 자유롭게 선택·교체할 수 있다.
-**① artifact 경로**: L1이 기존 저장소에 저장한 산출물을 L2의 ArtifactLoader가 읽어 결과물 품질을 평가.
-**② span 경로**: L1이 OTel로 방출한 실행 흔적을 L2의 SpanLoader가 읽어 실행 품질을 평가.
+**Observe First, Evaluate Async**: L1 파이프라인 워커는 artifact 저장 + OTel Traces 방출만 하고 즉시 완료한다. L2 평가 워커는 **별도 프로세스**에서 비동기로 실행되며, artifact와 span을 ID 기반 API 조회로 수집한다.
+**두 경로의 분기**: Component의 `__call__`이 실행되면 ① 결과물은 기존 저장소에, ② 실행 흔적은 OTel Traces로 **동시에** 나간다.
+**OTel의 벤더 중립 원칙**: L1은 Traces를, L2는 Metrics를 OTel로 방출한다. 둘 다 OTLP로 내보내므로, 수신 백엔드를 자유롭게 선택·교체할 수 있다.
+**OTLP 백엔드의 3가지 역할**: ① L1 trace의 싱크(sink) ② L2가 span을 조회하는 소스(source) ③ L2 평가 결과의 싱크(sink).
 
 ---
 
@@ -378,8 +386,7 @@ kms_eval/
     evaluators/*.yaml       평가 정의
     groups/*.yaml            집계 정의
 
-  corpus/                   Seed Corpus (테스트 입력 파일)
-  golden/                   Golden Reference (기대 출력물)
+  golden/                   Seed Corpus + Golden Reference (입력 파일과 기대 출력물을 함께 관리)
 ```
 
 ## 5.2 5계층 책임 분리
@@ -473,29 +480,36 @@ Evaluator는 저장소 위치를 모른다. 추상화된 Loader를 통해 읽는
 
 | Loader | 읽는 곳 | 용도 |
 |---|---|---|
-| **ArtifactLoader** | S3, PostgreSQL, Graph DB | 파이프라인 산출물 |
-| **SpanLoader** | File (.jsonl), OTLP, InMemory | 실행 흔적 |
+| **ArtifactLoader** | S3, PostgreSQL, Graph DB | 파이프라인 산출물 (ID 기반 조회) |
+| **SpanLoader** | OTLP 백엔드 API 또는 InMemory | 실행 흔적 (trace_id 기반 조회) |
 | **GoldenLoader** | golden/ 디렉토리 | 기대 출력물 (사람이 작성) |
 
-로컬 개발에서는 `InMemorySpanLoader`, 운영에서는 `OTLPSpanLoader`로 교체. Evaluator 코드는 무수정.
+평가 워커는 파이프라인 워커와 **별도 프로세스**에서 실행되므로, SpanLoader는 실행 환경에 따라 구현이 달라진다:
+
+| SpanLoader 구현 | 데이터 접근 | 사용 모드 |
+|---|---|---|
+| **InMemorySpanLoader** | 프로세스 내 메모리 | Local 전용 (단일 프로세스) |
+| **APISpanLoader** | OTLP 백엔드 API (trace_id 기반) | CI / Nightly / Shadow |
+
+Evaluator 코드는 어느 구현이든 무수정. Loader만 교체.
 
 ## 5.6 Golden Reference
 
 Golden은 "예상 지표값"이 아니라 **기대하는 출력물 자체**다. 지표는 비교 결과로 계산된다.
 
 ```
-corpus/pdf_report.pdf          ← 입력 파일
+golden/pdf_report/
+  input.pdf                    ← 입력 파일 (Seed Corpus)
+  expected.md                  ← 기대 출력 (사람이 작성)
+
      │
-     ▼ Pipeline 실행
-     │
-artifact (body_md)             ← 실제 출력
-
-golden/pdf_report/expected.md  ← 기대 출력 (사람이 작성)
-
-     ↓ artifact vs golden 비교
-
+     ▼ input.pdf → Pipeline 실행 → artifact (body_md)
+     ▼ artifact vs expected.md 비교
+     
 chrf_plus = 0.92               ← 계산된 지표값
 ```
+
+동일 대상의 입력과 기대 출력을 한 디렉토리에서 관리한다.
 
 ## 5.7 확장 시 코드 변경 범위
 
