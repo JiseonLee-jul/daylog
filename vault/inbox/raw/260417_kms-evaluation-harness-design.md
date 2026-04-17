@@ -365,6 +365,11 @@ kms_eval/
     p95_latency.py
     token_cost.py
 
+  loaders/
+    artifact_loader.py      ArtifactLoader 추상 + S3/Local 구현
+    span_loader.py          SpanLoader 추상 + InMemory/File/OTLP 구현
+    golden_loader.py        GoldenLoader (golden/ 디렉토리에서 읽기)
+
   preprocess/
     normalize_whitespace.py
     strip_frontmatter.py
