@@ -1,11 +1,20 @@
 [
   {
+    "number": 31,
+    "title": "2026-04-17 (금)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] KMS Evaluation Harness + Ops 설계\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-04-17T01:32:04Z",
+    "updated_at": "2026-04-17T01:32:04Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/31"
+  },
+  {
     "number": 30,
     "title": "2026-04-16 (목)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ]\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] KMS 평가 지표/방법 설계\n\n\n### Review\n\n**오늘 한 일**\n- KMS Evaluation Harness + Ops 설계 중\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-04-16T01:13:24Z",
-    "updated_at": "2026-04-16T01:13:27Z",
+    "updated_at": "2026-04-17T01:31:39Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/30"
   },
   {
