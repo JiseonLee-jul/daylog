@@ -271,25 +271,7 @@ LLMComponent는 `_llm_call()` 래퍼를 제공하여 LLM 호출마다 **자식 s
 
 \* = LLMComponent 상속 (gen_ai.* 속성 자동 기록)
 
-## 4.4 Celery Task와의 관계
-
-Component(로직)과 Celery task(오케스트레이션)는 분리한다. Task는 Component의 얇은 래퍼.
-
-```python
-# Component: 순수 로직
-class Parser(Component[SourceRecord, ParseResult]):
-    component_name = "parser"
-    def _run(self, source_record):
-        return docling.convert(source_record.raw_path)
-
-# Task: 오케스트레이션만
-@shared_task(bind=True, max_retries=3)
-def parse_task(self, source_id: str):
-    source_record = load_source_record(source_id)
-    return _parser(source_record)
-```
-
-## 4.5 파이프라인 오케스트레이션
+## 4.4 파이프라인 오케스트레이션
 
 컴포넌트를 **어떤 순서로 호출하는가**를 정의하는 계층. 이 호출 구조가 OTel span 트리의 형태를 결정한다.
 
@@ -660,20 +642,37 @@ kms/eval/
 
 ### Component / Task 분리
 
-```
-Component (로직)  ←→  Celery Task (오케스트레이션)
-     분리                  얇은 래퍼
+Component는 **실행 환경을 모르는 순수 로직**이고, Celery task는 **"어떤 워커에서 실행할지"만 결정하는 얇은 래퍼**다. 이 분리 덕분에 같은 코드가 로컬과 분산 모두에서 동작한다.
 
-파이프라인 실행은 Celery 워커에서 분산.
-평가 실행(L2)은 별도 프로세스에서 일괄 수행.
+```python
+# Component: 순수 로직 (Celery를 모름)
+class Parser(Component[SourceRecord, ParseResult]):
+    component_name = "parser"
+    def _run(self, source_record):
+        return docling.convert(source_record.raw_path)
+
+# Celery Task: 오케스트레이션만
+@shared_task(bind=True, max_retries=3)
+def parse_task(self, source_id: str):
+    source_record = load_source_record(source_id)
+    return _parser(source_record)
 ```
+
+```
+로컬:   parser(source_record)           ← Component 직접 호출
+분산:   parse_task.delay(source_id)      ← Celery가 워커 배정, 내부에서 같은 Component 호출
+```
+
+파이프라인 실행은 Celery 워커에서 분산. 평가 실행(L2)은 별도 프로세스에서 일괄 수행.
 
 ### Trace Propagation
 
-Celery 워커가 다른 프로세스에서 실행되면 trace가 끊긴다. `CeleryInstrumentor`가 task 메시지 헤더에 trace context를 자동 삽입하여 해결.
+Celery 워커는 별도 프로세스이므로 메모리를 공유하지 않는다. 그대로 두면 **워커가 만든 span이 원래 trace에 연결되지 않아** 파이프라인 전체를 하나의 trace로 볼 수 없다.
+
+`CeleryInstrumentor`가 이 문제를 해결한다: task 전송 시 trace context를 메시지 헤더에 자동 삽입하고, 워커가 수신 시 헤더에서 꺼내 부모 span으로 연결한다.
 
 ```python
-# telemetry.py 초기화 시 한 줄
+# platform/shared/observability/telemetry.py 초기화 시 한 줄
 CeleryInstrumentor().instrument()
 ```
 
