@@ -382,6 +382,9 @@ kms_eval/
     normalize_whitespace.py
     strip_frontmatter.py
 
+  loggers/
+    otel_logger.py          평가 결과를 OTel Metrics로 방출
+
   configs/
     evaluators/*.yaml       평가 정의
     groups/*.yaml            집계 정의
@@ -608,34 +611,33 @@ L2 Evaluator ──→ OTel Metrics ──→ OTLP ──→ 어디든
 
 ### Semantic Convention
 
-span/metric에 기록하는 속성의 네임스페이스 규약.
+span/metric에 기록하는 속성의 네임스페이스 규약. **OTel 공식 속성을 우선 사용하고, 공식에 없는 개념만 커스텀(`kms.*`)으로 정의한다.** 공식 속성명을 쓰면 수신 도구(Langfuse, Grafana 등)가 자동 해석하지만, 커스텀 이름은 raw key-value로만 표시된다.
 
-**`kms.*`**: 우리가 정의하는 애플리케이션 속성. OTel은 공식 네임스페이스와 충돌하지 않는 사용자 정의를 허용한다.
+**공통 속성 (모든 span에 기록)**
 
-| 속성 | 예시 | 용도 |
-|---|---|---|
-| `kms.component` | `"parser"` | 어떤 컴포넌트인가 |
-| `kms.component.version` | `"docling-1.3"` | 어떤 구현/버전인가 |
-| `kms.source_id` | `"src_001"` | 어떤 문서를 처리했는가 |
-| `kms.artifact_path` | `"s3://...body.md"` | 산출물 위치 (큰 결과물은 경로만) |
-| `kms.status` | `"completed"` | 성공/실패 |
+| 속성 | 출처 | 예시 | 용도 |
+|---|---|---|---|
+| `service.version` | OTel 공식 | `"a3f2c1"` (git hash) | 파이프라인 전체 버전 |
+| `deployment.environment.name` | OTel 공식 | `"production"` | prod/staging/dev 환경 분리 |
+| `user.id` | OTel 공식 | `"jiseon"`, `"slack-connector"` | 누가 트리거했는가 |
+| `session.id` | OTel 공식 | `"ingest-batch-20260417"` | 세션/배치 단위 분석 |
+| `error.type` | OTel 공식 | `"TimeoutError"` | 실패 시 오류 유형 |
+| `kms.component` | 커스텀 | `"parser"`, `"chunker"` | 어떤 컴포넌트인가 |
+| `kms.component.version` | 커스텀 | `"docling-1.3"` | 컴포넌트 구현/버전 |
+| `kms.artifact_path` | 커스텀 | `"s3://...body.md"` | 산출물 저장 경로 |
+| `kms.status` | 커스텀 | `"completed"`, `"skipped"` | 처리 상태 (성공 포함) |
 
-**`gen_ai.*`**: OTel 공식 GenAI Semantic Convention. Langfuse 등 도구가 자동 인식.
+**LLM 호출 속성 (LLMComponent span에만 추가)**
 
-| 속성 | 예시 | 용도 |
-|---|---|---|
-| `gen_ai.system` | `"anthropic"` | LLM 제공자 |
-| `gen_ai.request.model` | `"claude-haiku"` | 모델 |
-| `gen_ai.usage.input_tokens` | `1200` | 입력 토큰 |
-| `gen_ai.usage.output_tokens` | `350` | 출력 토큰 |
-
-### Artifact 크기 정책
-
-| 데이터 | 크기 | span에 기록하는 것 |
-|---|---|---|
-| parse_meta, token_count 등 | 수 바이트 | 값 자체 |
-| body_md, chunks 본문 | 수 KB ~ MB | **경로만** (`kms.artifact_path`) |
-| embedding 벡터 | 수 MB | **경로만** (DB 참조) |
+| 속성 | 출처 | 예시 | 용도 |
+|---|---|---|---|
+| `gen_ai.system` | OTel 공식 | `"anthropic"` | LLM 제공자 |
+| `gen_ai.request.model` | OTel 공식 | `"claude-haiku"` | 요청 모델명 |
+| `gen_ai.operation.name` | OTel 공식 | `"chat"` | 작업 종류 (chat/embed) |
+| `gen_ai.request.temperature` | OTel 공식 | `0.7` | 재현성 추적 |
+| `gen_ai.usage.input_tokens` | OTel 공식 | `1200` | 입력 토큰 → 비용 계산 |
+| `gen_ai.usage.output_tokens` | OTel 공식 | `350` | 출력 토큰 → 비용 계산 |
+| `gen_ai.data_source.id` | OTel 공식 | `"src_001"` | 처리 대상 소스 식별 |
 
 ### OTel 관련 코드의 위치
 
