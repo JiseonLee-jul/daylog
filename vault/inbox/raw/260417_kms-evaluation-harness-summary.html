@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KMS Evaluation Harness — 설계 요약</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg:        #0d0f12;
+    --bg-1:      #141720;
+    --bg-2:      #1c2030;
+    --bg-3:      #242840;
+    --border:    #2a2f45;
+    --border-hi: #3a4060;
+    --text:      #d8dce8;
+    --text-dim:  #7a8098;
+    --text-mute: #4a5070;
+    --yellow:    #f9c846;
+    --yellow-dk: #c49a1e;
+    --yellow-bg: rgba(249,200,70,0.08);
+    --cyan:      #4dd8e0;
+    --cyan-bg:   rgba(77,216,224,0.07);
+    --green:     #5ec97a;
+    --green-bg:  rgba(94,201,122,0.07);
+    --red:       #e05c6a;
+    --mono: 'IBM Plex Mono', 'Consolas', monospace;
+    --sans: 'Noto Sans KR', -apple-system, 'Malgun Gothic', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    line-height: 1.7;
+    padding: 48px 24px 64px;
+  }
+
+  .doc { max-width: 1060px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.25;
+    color: #eef0f8;
+    margin-bottom: 10px;
+  }
+  h1 span {
+    color: var(--yellow);
+  }
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-mute);
+    letter-spacing: 0.5px;
+  }
+  .header-meta b { color: var(--text-dim); }
+
+  /* ── SECTION TITLE ── */
+  .sec-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--yellow);
+    background: var(--yellow-bg);
+    border: 1px solid var(--yellow-dk);
+    border-radius: 3px;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .sec-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #eef0f8;
+    letter-spacing: -0.2px;
+  }
+  .sec-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  section { margin-bottom: 52px; }
+
+  /* ── 섹션 1: 목적 ── */
+  .purpose-block {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--yellow);
+    border-radius: 4px;
+    padding: 20px 24px;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--text);
+  }
+  .purpose-block strong {
+    color: var(--yellow);
+    font-weight: 600;
+  }
+
+  /* ── 섹션 2: 아키텍처 다이어그램 ── */
+  .arch-wrap {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 24px 32px;
+    position: relative;
+  }
+
+  /* 계층 레이블 공통 */
+  .layer {
+    position: relative;
+    border-radius: 4px;
+    padding: 16px 20px 18px;
+    margin-bottom: 0;
+  }
+  .layer-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .layer-label .lnum {
+    font-size: 9px;
+    opacity: 0.6;
+  }
+
+  /* L3 */
+  .layer-l3 {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--cyan);
+    margin-bottom: 6px;
+  }
+  .layer-l3 .layer-label { color: var(--cyan); }
+  .layer-l3-title {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .trigger-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .trigger-chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 11px;
+    border-radius: 3px;
+    background: var(--bg-3);
+    border: 1px solid var(--border-hi);
+    color: var(--text);
+  }
+  .trigger-chip.active {
+    background: rgba(77,216,224,0.12);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  /* L2 */
+  .layer-l2 {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--yellow);
+    margin-bottom: 6px;
+  }
+  .layer-l2 .layer-label { color: var(--yellow); }
+
+  .l2-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  .l2-box {
+    background: var(--bg-3);
+    border: 1px solid var(--border-hi);
+    border-radius: 4px;
+    padding: 12px 14px;
+  }
+  .l2-box-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--yellow);
+    margin-bottom: 6px;
+  }
+  .l2-box-desc {
+    font-size: 11.5px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .flow-arrow-v {
+    text-align: center;
+    padding: 4px 0;
+    color: var(--text-mute);
+    font-size: 18px;
+    line-height: 1;
+    position: relative;
+  }
+  .flow-arrow-v::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 10px;
+    background: var(--border-hi);
+    margin: 0 auto 2px;
+  }
+  .flow-arrow-v::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 10px;
+    background: var(--border-hi);
+    margin: 2px auto 0;
+  }
+
+  /* L1 */
+  .layer-l1 {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--green);
+    margin-bottom: 6px;
+  }
+  .layer-l1 .layer-label { color: var(--green); }
+
+  .l1-inner {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .l1-box {
+    background: var(--bg-3);
+    border: 1px solid var(--border-hi);
+    border-radius: 4px;
+    padding: 10px 14px;
+    flex: 1;
+    min-width: 160px;
+  }
+  .l1-box-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--green);
+    margin-bottom: 4px;
+  }
+  .l1-box-desc {
+    font-size: 11.5px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* 횡단 인프라 */
+  .infra-band {
+    display: flex;
+    gap: 8px;
+    margin: 6px 0;
+    flex-wrap: wrap;
+  }
+  .infra-chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 5px 12px;
+    border-radius: 3px;
+    border: 1px dashed var(--border-hi);
+    color: var(--text-dim);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .infra-chip .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-mute);
+    flex-shrink: 0;
+  }
+  .infra-chip.otel .dot { background: var(--cyan); }
+  .infra-chip.storage .dot { background: var(--yellow); }
+  .infra-chip.celery .dot { background: var(--green); }
+
+  /* 데이터 흐름 박스 */
+  .flow-box {
+    margin-top: 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 20px;
+  }
+  .flow-box-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 12px;
+  }
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 12.5px;
+  }
+  .flow-step-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .badge-l1 { background: var(--green-bg); color: var(--green); border: 1px solid rgba(94,201,122,0.3); }
+  .badge-l2 { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(249,200,70,0.3); }
+  .badge-otel { background: var(--cyan-bg); color: var(--cyan); border: 1px solid rgba(77,216,224,0.3); }
+  .flow-step-text { color: var(--text-dim); line-height: 1.5; }
+  .flow-step-text em {
+    font-style: normal;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .flow-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 6px 0;
+  }
+  .path-row {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    margin-left: 24px;
+  }
+  .path-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-mute);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── 섹션 3: 카드 ── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 720px) {
+    .cards { grid-template-columns: 1fr; }
+    .l2-inner { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-icon {
+    width: 30px; height: 30px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .card-icon.yellow { background: var(--yellow-bg); }
+  .card-icon.cyan   { background: var(--cyan-bg); }
+  .card-icon.green  { background: var(--green-bg); }
+  .card-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .card-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .card-items li {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    padding-left: 14px;
+    position: relative;
+  }
+  .card-items li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--text-mute);
+  }
+  .card-items li code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--bg-3);
+    border: 1px solid var(--border-hi);
+    border-radius: 2px;
+    padding: 0 5px;
+    color: var(--text);
+  }
+  .card-items li strong { color: var(--text); font-weight: 600; }
+
+  /* ── 섹션 4: 표 ── */
+  .dev-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .dev-table th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-hi);
+    background: var(--bg-1);
+  }
+  .dev-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .dev-table tr:last-child td { border-bottom: none; }
+  .dev-table tr:hover td { background: var(--bg-1); }
+  .dev-table td:first-child {
+    color: var(--text);
+    font-weight: 500;
+    white-space: nowrap;
+    width: 32%;
+  }
+  .dev-table td code {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    background: var(--bg-3);
+    border: 1px solid var(--border-hi);
+    border-radius: 2px;
+    padding: 1px 6px;
+    color: var(--cyan);
+  }
+  .dev-table td em {
+    font-style: normal;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .table-wrap {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-ref {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-mute);
+  }
+  .footer-ref a {
+    color: var(--yellow);
+    text-decoration: none;
+    border-bottom: 1px solid var(--yellow-dk);
+  }
+  .footer-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-mute);
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- HEADER -->
+  <header>
+    <span class="header-tag">KMS · Evaluation Harness · Design Summary</span>
+    <h1>측정 루프를 설계한다 —<br><span>Evaluation Harness</span></h1>
+    <div class="header-meta">
+      <b>Date</b> 2026-04-17 &nbsp;·&nbsp;
+      <b>Author</b> KMS Team &nbsp;·&nbsp;
+      <b>Status</b> Draft / 팀 공유용
+    </div>
+  </header>
+
+  <!-- 섹션 1: 목적 -->
+  <section>
+    <div class="sec-label">
+      <span class="sec-num">01</span>
+      <span class="sec-title">목적</span>
+      <span class="sec-line"></span>
+    </div>
+    <div class="purpose-block">
+      KMS는 단번의 설계로 완성되지 않는다. 컴포넌트를 교체·개선하며 점진적으로 발전시키는 체계가 필요하다.
+      그 중심에 <strong>Evaluation Harness</strong> — 빠르게 측정하고, 해석하고, 개선을 검증하는 루프 — 가 있다.
+    </div>
+  </section>
+
+  <!-- 섹션 2: 아키텍처 -->
+  <section>
+    <div class="sec-label">
+      <span class="sec-num">02</span>
+      <span class="sec-title">아키텍처</span>
+      <span class="sec-line"></span>
+    </div>
+
+    <div class="arch-wrap">
+
+      <!-- L3 -->
+      <div class="layer layer-l3">
+        <div class="layer-label">
+          <span class="lnum">L3</span>
+          Continuous Evaluation
+          <span style="color:var(--text-mute);font-size:11px;font-weight:400;margin-left:4px;">— 언제 평가하는가</span>
+        </div>
+        <div class="trigger-row">
+          <span class="trigger-chip active">Local (dev)</span>
+          <span class="trigger-chip active">CI (PR gate)</span>
+          <span class="trigger-chip active">Nightly (full suite)</span>
+          <span class="trigger-chip active">Shadow (prod traffic)</span>
+        </div>
+      </div>
+
+      <!-- 화살표 L3→L2 -->
+      <div style="text-align:center;padding:3px 0;color:var(--text-mute);font-size:13px;">&#8595;</div>
+
+      <!-- L2 -->
+      <div class="layer layer-l2">
+        <div class="layer-label">
+          <span class="lnum">L2</span>
+          Evaluation Harness
+          <span style="color:var(--text-mute);font-size:11px;font-weight:400;margin-left:4px;">— 무엇을 측정하는가</span>
+        </div>
+        <div class="l2-inner">
+          <div class="l2-box">
+            <div class="l2-box-title">Evaluator</div>
+            <div class="l2-box-desc">평가 단위. ArtifactLoader + GoldenLoader로 데이터를 로드하고 실행 결과를 Metric에 위임</div>
+          </div>
+          <div class="l2-box">
+            <div class="l2-box-title">Metric</div>
+            <div class="l2-box-desc">개별 측정 함수. plugin 방식으로 Registry에 등록. <code style="font-family:var(--mono);font-size:10px;background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:0 4px;color:var(--text);">@register_metric</code></div>
+          </div>
+          <div class="l2-box">
+            <div class="l2-box-title">Group + Comparator</div>
+            <div class="l2-box-desc">여러 Evaluator 집계. 이전 run 대비 회귀/개선을 판정. OTel Metrics로 방출</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 횡단 인프라 L1+L2 -->
+      <div style="padding:6px 0 2px;">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;">L1 + L2 횡단 인프라</div>
+        <div class="infra-band">
+          <span class="infra-chip otel"><span class="dot"></span>OTel — Traces (L1) + Metrics (L2)</span>
+          <span class="infra-chip storage"><span class="dot"></span>Shared Storage — S3 / DB (artifact + golden)</span>
+        </div>
+      </div>
+
+      <!-- 화살표 L2→L1 -->
+      <div style="text-align:center;padding:3px 0;color:var(--text-mute);font-size:13px;">&#8595;</div>
+
+      <!-- L1 -->
+      <div class="layer layer-l1">
+        <div class="layer-label">
+          <span class="lnum">L1</span>
+          Pipeline
+          <span style="color:var(--text-mute);font-size:11px;font-weight:400;margin-left:4px;">— 비즈니스 로직</span>
+        </div>
+        <div class="l1-inner">
+          <div class="l1-box">
+            <div class="l1-box-title">Component Base Class</div>
+            <div class="l1-box-desc">모든 컴포넌트의 루트. OTel 계측·에러처리 내장. 서브클래스는 <code style="font-family:var(--mono);font-size:10px;background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:0 4px;color:var(--text);">_run()</code>만 구현</div>
+          </div>
+          <div class="l1-box">
+            <div class="l1-box-title">LLMComponent</div>
+            <div class="l1-box-desc">LLM 호출 전용 서브클래스. <code style="font-family:var(--mono);font-size:10px;background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:0 4px;color:var(--text);">gen_ai.*</code> 속성 자동 기록</div>
+          </div>
+          <div class="l1-box">
+            <div class="l1-box-title">Pipeline Workers</div>
+            <div class="l1-box-desc">Celery 기반 비동기 실행. 완료 후 평가 워커를 트리거</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L1 전용 인프라 -->
+      <div style="padding:6px 0 0;">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;">L1 전용 인프라</div>
+        <div class="infra-band">
+          <span class="infra-chip celery"><span class="dot"></span>Celery Workers</span>
+          <span class="infra-chip celery"><span class="dot"></span>Trace Context (propagation)</span>
+        </div>
+      </div>
+
+      <!-- 데이터 흐름 -->
+      <div class="flow-box">
+        <div class="flow-box-title">데이터 흐름 — L1 → L2</div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <span class="flow-step-badge badge-l1">L1</span>
+            <span class="flow-step-text">Component <em>__call__</em> 실행 — 두 경로로 분기:</span>
+          </div>
+          <div class="path-row">
+            <span class="path-num">①</span>
+            <span class="flow-step-text" style="font-size:12px;"><em>artifact + 실행 메타</em> → S3/DB — 평가 워커가 읽는 <em>유일한 소스</em></span>
+          </div>
+          <div class="path-row">
+            <span class="path-num">②</span>
+            <span class="flow-step-text" style="font-size:12px;"><em>OTel Traces</em> → OTLP → 대시보드 — 시각화 전용, 꺼내오지 않음</span>
+          </div>
+          <hr class="flow-divider">
+          <div class="flow-step">
+            <span class="flow-step-badge badge-l2">L2</span>
+            <span class="flow-step-text">파이프라인 워커 완료 후 <em>비동기</em>로 평가 워커 트리거</span>
+          </div>
+          <div class="flow-step">
+            <span class="flow-step-badge badge-l2">L2</span>
+            <span class="flow-step-text">ArtifactLoader + GoldenLoader → Evaluator → Group → Comparator → <em>OTel Metrics 방출</em></span>
+          </div>
+          <div class="flow-step">
+            <span class="flow-step-badge badge-otel">OTel</span>
+            <span class="flow-step-text">Langfuse / MLflow / Grafana 등 어떤 백엔드든 교체 가능 — <em>벤더 종속 없음</em></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 섹션 3: 핵심 개념 -->
+  <section>
+    <div class="sec-label">
+      <span class="sec-num">03</span>
+      <span class="sec-title">핵심 개념</span>
+      <span class="sec-line"></span>
+    </div>
+    <div class="cards">
+
+      <!-- 카드 1 -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon yellow">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#f9c846" stroke-width="1.5"/><path d="M5 8h6M8 5v6" stroke="#f9c846" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="card-name">Component Base Class</div>
+        </div>
+        <ul class="card-items">
+          <li>모든 파이프라인 컴포넌트가 상속</li>
+          <li><code>__call__</code>이 OTel 계측 + 에러처리를 은닉</li>
+          <li>서브클래스는 <code>_run()</code>만 구현 — <strong>OTel 코드 0줄</strong></li>
+          <li>LLM 호출 컴포넌트는 <code>LLMComponent</code> 상속, <code>gen_ai.*</code> 자동 기록</li>
+        </ul>
+      </div>
+
+      <!-- 카드 2 -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon cyan">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 13V7l5-4 5 4v6H3z" stroke="#4dd8e0" stroke-width="1.5" stroke-linejoin="round"/><rect x="6" y="9" width="4" height="4" rx="0.5" stroke="#4dd8e0" stroke-width="1.2"/></svg>
+          </div>
+          <div class="card-name">Evaluator / Metric / Group</div>
+        </div>
+        <ul class="card-items">
+          <li>EleutherAI lm-evaluation-harness 패턴 차용</li>
+          <li>평가 정의 = <strong>YAML(데이터) + Metric(plugin) + Group(집계)</strong></li>
+          <li><code>@register_evaluator</code>, <code>@register_metric</code>으로 동적 등록</li>
+          <li>새 메트릭 추가 = <code>metrics/</code> 파일 + YAML 한 줄 — <strong>코어 무수정</strong></li>
+        </ul>
+      </div>
+
+      <!-- 카드 3 -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#5ec97a" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="#5ec97a" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="card-name">OTel (OpenTelemetry)</div>
+        </div>
+        <ul class="card-items">
+          <li>평가의 인프라 계층 — <strong>관측 도구가 아닌 관측의 공용 규격</strong></li>
+          <li>L1은 <em>Traces</em>를, L2는 <em>Metrics</em>를 OTLP로 방출</li>
+          <li>방출 전용 — 백엔드에서 꺼내오지 않음 → 벤더 종속 없음</li>
+          <li>Langfuse, MLflow, Grafana 등 어떤 대시보드든 교체 가능</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 섹션 4: 개발 가이드 -->
+  <section>
+    <div class="sec-label">
+      <span class="sec-num">04</span>
+      <span class="sec-title">개발 가이드</span>
+      <span class="sec-line"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="dev-table">
+        <thead>
+          <tr>
+            <th>상황</th>
+            <th>하는 일</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>파이프라인 컴포넌트 추가/교체</td>
+            <td>Component 상속, <code>_run()</code>만 구현. OTel은 Base Class가 자동 처리</td>
+          </tr>
+          <tr>
+            <td>평가 항목 추가</td>
+            <td><code>evaluators/</code>에 클래스 + <code>configs/evaluators/</code>에 YAML 한 장</td>
+          </tr>
+          <tr>
+            <td>새 메트릭 추가</td>
+            <td><code>metrics/</code>에 파일 + YAML <code>metric_list</code>에 한 줄 추가</td>
+          </tr>
+          <tr>
+            <td>평가 실행</td>
+            <td><code>python -m kms.eval.run --evaluator parser_pdf</code></td>
+          </tr>
+          <tr>
+            <td>결과 확인</td>
+            <td><code>runs/{run_id}/results.json</code> → git으로 이력 관리</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-ref">
+      상세 설계서: <a href="260417_kms-evaluation-harness-design.md">260417_kms-evaluation-harness-design.md</a>
+    </div>
+    <div class="footer-date">2026-04-17</div>
+  </footer>
+
+</div>
+</body>
+</html>
