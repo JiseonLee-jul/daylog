@@ -11,22 +11,15 @@
     --bg:           #ffffff;
     --bg-1:         #f8f9fb;
     --bg-2:         #f0f2f5;
-    --bg-3:         #e6e9ee;
     --border:       #dde0e8;
     --border-hi:    #c4c9d8;
-
     --text:         #18202e;
     --text-dim:     #46526b;
     --text-mute:    #8a94a8;
-
     --accent:       #b37400;
     --accent-mid:   #d49000;
-    --accent-light: #f0a500;
     --accent-bg:    #fdf8f0;
-    --accent-bg2:   #fef3dc;
     --accent-border:#e5c880;
-    --accent-border-hi: #d4a920;
-
     --mono: 'IBM Plex Mono', 'Consolas', monospace;
     --sans: 'Noto Sans KR', -apple-system, 'Malgun Gothic', sans-serif;
     --radius: 5px;
@@ -73,7 +66,6 @@
     font-family: var(--mono);
     font-size: 11px;
     color: var(--text-mute);
-    letter-spacing: 0.3px;
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
@@ -90,11 +82,10 @@
     background: var(--accent-bg);
     border: 1px solid var(--accent-border);
     color: var(--accent);
-    letter-spacing: 0.5px;
     text-transform: uppercase;
   }
 
-  /* ── SECTION TITLE ── */
+  /* ── SECTION ── */
   .sec-label {
     display: flex;
     align-items: center;
@@ -116,52 +107,42 @@
     font-size: 15px;
     font-weight: 600;
     color: var(--text);
-    letter-spacing: -0.2px;
   }
   .sec-line { flex: 1; height: 1px; background: var(--border); }
-
   section { margin-bottom: 52px; }
 
-  /* ══════════════════════════════════════════
-     섹션 1: 목적
-  ══════════════════════════════════════════ */
+  /* ── 섹션 1 ── */
   .purpose-block {
     border-left: 3px solid var(--accent-mid);
     padding: 14px 20px;
     font-size: 13.5px;
     line-height: 1.9;
-    color: var(--text);
-    margin-bottom: 26px;
     background: var(--accent-bg);
+    margin-bottom: 24px;
   }
   .purpose-block strong { color: var(--accent); font-weight: 600; }
 
-  .req-section {
-    padding-left: 4px;
-  }
-  .req-subject {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-  .req-subject-label {
+  .req-label {
     font-family: var(--mono);
     font-size: 10px;
     font-weight: 600;
     color: var(--text-mute);
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    flex-shrink: 0;
+    margin-bottom: 6px;
+  }
+  .req-subject {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    padding-left: 2px;
   }
   .req-list {
     list-style: none;
-    margin-bottom: 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding-left: 2px;
   }
   .req-list li {
     display: flex;
@@ -173,313 +154,47 @@
   }
   .req-bullet {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
     color: var(--accent);
     background: var(--accent-bg);
     border: 1px solid var(--accent-border);
     border-radius: 3px;
-    padding: 1px 7px;
-    letter-spacing: 0.5px;
+    padding: 2px 6px;
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
     white-space: nowrap;
   }
   .req-list li strong { color: var(--text); font-weight: 600; }
 
-  .req-divider {
-    width: 100%;
-    height: 1px;
-    background: var(--border);
-    margin: 20px 0;
-  }
-
-  /* ══════════════════════════════════════════
-     섹션 2: 아키텍처
-  ══════════════════════════════════════════ */
+  /* ── 섹션 2: 아키텍처 ── */
   .arch-outer {
     display: grid;
     grid-template-columns: 1fr 210px;
     gap: 16px;
     align-items: start;
   }
-  @media (max-width: 800px) {
+  @media (max-width: 860px) {
     .arch-outer { grid-template-columns: 1fr; }
   }
 
-  .arch-flow {
+  .arch-diagram {
     background: var(--bg-1);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 22px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+    padding: 24px;
+    overflow-x: auto;
   }
-
-  .layer-block {
-    border-radius: var(--radius);
-    padding: 14px 16px 16px;
-  }
-  .lb-active {
-    background: var(--accent-bg);
-    border: 1.5px solid var(--accent-border);
-  }
-  .lb-neutral {
-    background: var(--bg-2);
-    border: 1.5px solid var(--border-hi);
-  }
-
-  .lb-label {
+  .arch-diagram pre {
     font-family: var(--mono);
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .lb-active .lb-label { color: var(--accent); }
-  .lb-neutral .lb-label { color: var(--text-mute); }
-  .lb-label .lname {
     font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
-    font-family: var(--sans);
-  }
-  .lb-label .lsub {
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: 0;
-    font-family: var(--sans);
-    color: var(--text-mute);
-    margin-left: 2px;
-  }
-
-  /* L1 파이프라인 스테이지 */
-  .pipeline-stages {
-    display: flex;
-    align-items: stretch;
-    gap: 0;
-    margin-bottom: 10px;
-  }
-  .stage-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 9px 12px;
-    flex: 1;
-  }
-  .stage-name {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
+    line-height: 1.55;
     color: var(--text-dim);
-    margin-bottom: 5px;
-  }
-  .stage-comps {
-    font-size: 11px;
-    color: var(--text-mute);
-    line-height: 1.5;
-  }
-  .stage-arrow {
-    font-size: 14px;
-    color: var(--border-hi);
-    padding: 0 6px;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
+    margin: 0;
+    white-space: pre;
+    tab-size: 4;
   }
 
-  /* __call__ 분기 */
-  .call-section {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 10px 14px;
-  }
-  .call-trigger {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    font-weight: 600;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .call-trigger::before {
-    content: '';
-    display: inline-block;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent-mid);
-    flex-shrink: 0;
-  }
-  .fork-row {
-    display: flex;
-    gap: 8px;
-  }
-  .fork-path {
-    flex: 1;
-    border-radius: 3px;
-    padding: 8px 10px;
-    font-size: 11.5px;
-    line-height: 1.5;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .fork-primary {
-    background: var(--accent-bg2);
-    border: 1px solid var(--accent-border);
-  }
-  .fork-secondary {
-    background: var(--bg-2);
-    border: 1px solid var(--border-hi);
-  }
-  .fork-num {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    margin-bottom: 1px;
-  }
-  .fork-primary .fork-num { color: var(--accent); }
-  .fork-secondary .fork-num { color: var(--text-mute); }
-  .fork-dest {
-    font-weight: 600;
-    color: var(--text);
-    font-size: 11.5px;
-  }
-  .fork-note {
-    font-size: 10.5px;
-    color: var(--text-mute);
-    font-style: italic;
-  }
-
-  /* 커넥터 */
-  .flow-connector {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 4px 0;
-    min-height: 28px;
-  }
-  .conn-line {
-    width: 1.5px;
-    background: var(--border-hi);
-    flex: 1;
-    min-height: 8px;
-  }
-  .conn-arrow {
-    font-size: 11px;
-    color: var(--border-hi);
-    line-height: 1;
-  }
-
-  .async-connector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 0;
-    gap: 8px;
-  }
-  .async-line {
-    flex: 1;
-    height: 1.5px;
-    background: repeating-linear-gradient(90deg, var(--border-hi) 0px, var(--border-hi) 5px, transparent 5px, transparent 10px);
-  }
-  .async-badge {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    font-weight: 600;
-    color: var(--text-mute);
-    background: var(--bg-2);
-    border: 1px dashed var(--border-hi);
-    border-radius: 3px;
-    padding: 3px 10px;
-    white-space: nowrap;
-    letter-spacing: 0.5px;
-  }
-
-  /* L2 내부 */
-  .l2-pipeline {
-    display: flex;
-    align-items: stretch;
-    gap: 0;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-  }
-  .l2-node {
-    background: var(--bg);
-    border: 1px solid var(--accent-border);
-    border-radius: 4px;
-    padding: 7px 10px;
-    text-align: center;
-    flex: 1;
-    min-width: 88px;
-  }
-  .l2-node-name {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    font-weight: 600;
-    color: var(--accent);
-    margin-bottom: 2px;
-  }
-  .l2-node-sub {
-    font-size: 10px;
-    color: var(--text-mute);
-    line-height: 1.35;
-  }
-  .l2-arrow {
-    font-size: 13px;
-    color: var(--accent-border);
-    padding: 0 5px;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
-  .l2-emit {
-    background: var(--bg-2);
-    border: 1px solid var(--border-hi);
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 11.5px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--text-dim);
-    flex-wrap: wrap;
-  }
-  .l2-emit-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-dim);
-    white-space: nowrap;
-  }
-  .l2-emit-arrow { color: var(--border-hi); font-size: 13px; }
-
-  /* L3 칩 */
-  .l3-chips {
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap;
-  }
-  .l3-chip {
-    font-family: var(--mono);
-    font-size: 11px;
-    padding: 5px 12px;
-    border-radius: 3px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    font-weight: 500;
-  }
-
-  /* 횡단 인프라 사이드바 */
   .infra-sidebar {
     display: flex;
     flex-direction: column;
@@ -506,12 +221,12 @@
     padding: 10px 14px;
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 8px;
   }
   .infra-item {
     font-size: 11.5px;
     color: var(--text-dim);
-    line-height: 1.4;
+    line-height: 1.45;
     display: flex;
     align-items: flex-start;
     gap: 7px;
@@ -525,9 +240,7 @@
   .dot-accent { background: var(--accent-mid); }
   .dot-gray   { background: var(--text-mute); }
 
-  /* ══════════════════════════════════════════
-     섹션 3: 왜 빠른 루프인가 — 카드
-  ══════════════════════════════════════════ */
+  /* ── 섹션 3: 카드 ── */
   .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -541,12 +254,12 @@
     border: 1px solid var(--border);
     border-top: 3px solid var(--accent-mid);
     border-radius: var(--radius);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
   }
   .card-head {
-    padding: 14px 18px 13px;
+    padding: 14px 18px 12px;
     border-bottom: 1px solid var(--border);
   }
   .card-tag {
@@ -556,249 +269,31 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     display: block;
   }
   .card-title {
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 700;
     color: var(--text);
-    line-height: 1.38;
-    letter-spacing: -0.2px;
+    line-height: 1.4;
   }
-
-  /* 카드 내부 소형 그림 */
   .card-diagram {
-    background: #f8f9fb;
+    background: var(--bg-2);
     border-bottom: 1px solid var(--border);
     padding: 14px 16px;
-    font-family: var(--mono);
+    overflow-x: auto;
   }
-
-  /* 다이어그램 1: 상속 트리 */
-  .diag-base-class {
-    background: var(--bg);
-    border: 1px solid var(--border-hi);
-    border-radius: 3px;
-    padding: 6px 12px;
-    text-align: center;
-    margin-bottom: 2px;
-  }
-  .diag-bc-name {
+  .card-diagram pre {
     font-family: var(--mono);
     font-size: 10.5px;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .diag-bc-methods {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    color: var(--text-mute);
-    line-height: 1.6;
-    text-align: left;
-    padding-top: 4px;
-  }
-  .diag-bc-methods .mfixed { color: var(--text-dim); }
-  .diag-bc-methods .mreplace { color: var(--accent); }
-
-  .diag-tree-branch {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 0;
+    line-height: 1.5;
+    color: var(--text-dim);
     margin: 0;
-    position: relative;
+    white-space: pre;
   }
-  .diag-tree-stem {
-    width: 1px;
-    height: 18px;
-    background: var(--border-hi);
-    margin: 0 auto;
-  }
-  .diag-tree-horiz {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    position: relative;
-  }
-  .diag-tree-horiz::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 16px;
-    right: 16px;
-    height: 1px;
-    background: var(--border-hi);
-  }
-  .diag-tree-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .diag-tree-vert {
-    width: 1px;
-    height: 10px;
-    background: var(--border-hi);
-  }
-  .diag-leaf {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 4px 8px;
-    font-family: var(--mono);
-    font-size: 9.5px;
-    color: var(--text-dim);
-    white-space: nowrap;
-  }
-  .diag-inherit-label {
-    font-family: var(--mono);
-    font-size: 9px;
-    color: var(--text-mute);
-    text-align: center;
-    margin: 5px 0 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-  }
-  .diag-inherit-label::before,
-  .diag-inherit-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* 다이어그램 2: Registry 흐름 */
-  .diag-flow-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 6px;
-  }
-  .diag-flow-row:last-child { margin-bottom: 0; }
-  .diag-box {
-    border-radius: 3px;
-    padding: 5px 10px;
-    font-family: var(--mono);
-    font-size: 10px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .diag-box-accent {
-    background: var(--accent-bg2);
-    border: 1px solid var(--accent-border);
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .diag-box-gray {
-    background: var(--bg-2);
-    border: 1px solid var(--border-hi);
-    color: var(--text-dim);
-  }
-  .diag-box-result {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    font-size: 10px;
-  }
-  .diag-flow-arrow {
-    font-size: 12px;
-    color: var(--border-hi);
-    flex-shrink: 0;
-  }
-  .diag-flow-note {
-    font-family: var(--mono);
-    font-size: 9px;
-    color: var(--text-mute);
-    flex-shrink: 0;
-  }
-  .diag-indent {
-    padding-left: 14px;
-  }
-
-  /* 다이어그램 3: OTLP 분기 */
-  .diag-split {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .diag-sources {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 2px;
-  }
-  .diag-merge-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .diag-merge-lines {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
-    position: relative;
-  }
-  .diag-merge-line {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    width: 100%;
-  }
-  .diag-hline {
-    flex: 1;
-    height: 1px;
-    background: var(--border-hi);
-  }
-  .diag-vconnect {
-    width: 1px;
-    background: var(--border-hi);
-    align-self: stretch;
-    min-height: 8px;
-  }
-  .diag-targets {
-    display: flex;
-    gap: 5px;
-    margin-top: 2px;
-    flex-wrap: wrap;
-  }
-  .diag-target-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 4px 9px;
-    font-family: var(--mono);
-    font-size: 9.5px;
-    color: var(--text-dim);
-    text-align: center;
-    flex: 1;
-    min-width: 0;
-  }
-  .diag-target-box small {
-    display: block;
-    font-size: 8.5px;
-    color: var(--text-mute);
-    margin-top: 1px;
-  }
-  .diag-otlp-hub {
-    background: var(--bg-2);
-    border: 1px solid var(--border-hi);
-    border-radius: 3px;
-    padding: 5px 12px;
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-dim);
-    text-align: center;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  /* 카드 바디 텍스트 */
   .card-body {
-    padding: 13px 18px 15px;
+    padding: 14px 18px;
     display: flex;
     flex-direction: column;
     gap: 7px;
@@ -819,52 +314,52 @@
   }
   .card-item strong { color: var(--text); font-weight: 600; }
 
-  /* ══════════════════════════════════════════
-     섹션 4: 추후 과제
-  ══════════════════════════════════════════ */
-  .todo-grid {
+  /* ── 섹션 4: 추후 과제 ── */
+  .future-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
   }
   @media (max-width: 760px) {
-    .todo-grid { grid-template-columns: 1fr; }
+    .future-grid { grid-template-columns: 1fr; }
   }
-  .todo-group {}
-  .todo-group-title {
+  .future-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .future-title {
     font-family: var(--mono);
     font-size: 10px;
     font-weight: 600;
     color: var(--accent);
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    border-bottom: 1px solid var(--accent-border);
-    padding-bottom: 7px;
-    margin-bottom: 11px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
   }
-  .todo-list {
+  .future-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
-  .todo-list li {
-    font-size: 12.5px;
+  .future-list li {
+    font-size: 12px;
     color: var(--text-dim);
-    line-height: 1.55;
-    padding-left: 14px;
+    line-height: 1.5;
+    padding-left: 12px;
     position: relative;
   }
-  .todo-list li::before {
+  .future-list li::before {
     content: '·';
     position: absolute;
-    left: 3px;
-    color: var(--accent-mid);
+    left: 0;
+    color: var(--text-mute);
     font-weight: 700;
-    font-size: 14px;
-    line-height: 1.3;
   }
-  .todo-list li strong { color: var(--text); font-weight: 600; }
 
   /* ── FOOTER ── */
   footer {
@@ -917,36 +412,27 @@
       <span class="sec-title">목적</span>
       <span class="sec-line"></span>
     </div>
-
     <div class="purpose-block">
       KMS는 단번의 설계로 완성되지 않는다. 설계하고, 실 데이터에 부딪히고, 문제를 발견하고, 컴포넌트를 뜯어 고치는 과정이 반복될 수밖에 없다.
-      따라서 핵심은 <strong>문제를 빠르게 판단하고, 원인을 분석하고, 개선을 검증하는 루프</strong>를 체계적으로 갖추는 것이며,
-      그 중심에 <strong>Evaluation Harness</strong>가 있다.
+      따라서 핵심은 <strong>문제를 빠르게 판단하고, 원인을 분석하고, 개선을 검증하는 루프</strong>를 체계적으로 갖추는 것이며, 그 중심에 <strong>Evaluation Harness</strong>가 있다.
     </div>
-
-    <div class="req-section">
-      <div class="req-subject">
-        <span class="req-subject-label">평가 대상</span>
-        파이프라인 각 단계 + Knowledge Graph 품질
-      </div>
-
-      <div class="req-divider"></div>
-
-      <ul class="req-list">
-        <li>
-          <span class="req-bullet">컴포넌트 독립</span>
-          <span>컴포넌트가 교체되어도 평가 코어는 <strong>무수정</strong>. Evaluator만 유일한 수정 지점.</span>
-        </li>
-        <li>
-          <span class="req-bullet">분산 실행 대응</span>
-          <span>로컬과 <strong>Celery 분산 환경</strong> 모두에서 일관 동작.</span>
-        </li>
-        <li>
-          <span class="req-bullet">장기 확장</span>
-          <span>개발 도구에서 출발, <strong>운영 관측·감사 대시보드</strong>의 기반으로 확장.</span>
-        </li>
-      </ul>
-    </div>
+    <div class="req-label">평가 대상</div>
+    <div class="req-subject">파이프라인 각 단계(Ingest → Parse → Index) + Knowledge Graph 품질</div>
+    <div class="req-label" style="margin-top:8px;">요구사항</div>
+    <ul class="req-list">
+      <li>
+        <span class="req-bullet">독립</span>
+        <span>컴포넌트가 교체되어도 평가 <strong>코어는 무수정</strong>. Evaluator만 유일한 수정 지점.</span>
+      </li>
+      <li>
+        <span class="req-bullet">분산</span>
+        <span>로컬과 <strong>Celery 분산 환경</strong> 모두에서 일관 동작.</span>
+      </li>
+      <li>
+        <span class="req-bullet">확장</span>
+        <span>개발 도구에서 출발, <strong>운영 관측·감사 대시보드</strong>의 기반으로 확장.</span>
+      </li>
+    </ul>
   </section>
 
   <!-- 섹션 2: 아키텍처 -->
@@ -956,127 +442,94 @@
       <span class="sec-title">아키텍처</span>
       <span class="sec-line"></span>
     </div>
-
     <div class="arch-outer">
+      <div class="arch-diagram">
+<pre>
+═══════════════════════════════════════════════════════════════
+ L1  Pipeline (파이프라인 워커)
+═══════════════════════════════════════════════════════════════
 
-      <!-- 메인 플로우 -->
-      <div class="arch-flow">
+ [Seed Corpus]
+      │
+      ▼
+ Stage 1 (Ingest) ───▶ Stage 2 (Parse) ───▶ Stage 3 (Index)
+ ┌──────────────┐     ┌──────────────┐     ┌──────────────────┐
+ │ FileStore     │     │ Parser       │     │ PreValidator     │
+ │ DedupChecker  │     │ Chunker      │     │ Summarizer  ─┐   │
+ │ DepthResolver │     │              │     │ Embedder     ├병렬│
+ └──────┬───────┘     └──────┬───────┘     │ EntityExt.  ─┘   │
+        │                    │              │ PostValidator     │
+        │                    │              │ GraphRegistrar    │
+        │                    │              └──────┬───────────┘
+        │                    │                     │
+        ▼                    ▼                     ▼
 
-        <!-- L1 Pipeline (맨 위) -->
-        <div class="layer-block lb-neutral">
-          <div class="lb-label">
-            <span>L1</span>
-            <span class="lname">Pipeline</span>
-            <span class="lsub">— 파이프라인 워커</span>
-          </div>
+     각 Component의 __call__ 실행 시, 두 경로가 동시에 갈라짐:
 
-          <div class="pipeline-stages">
-            <div class="stage-box">
-              <div class="stage-name">Stage 1 &middot; Ingest</div>
-              <div class="stage-comps">FileStore, DedupChecker, DepthResolver</div>
-            </div>
-            <div class="stage-arrow">&#8594;</div>
-            <div class="stage-box">
-              <div class="stage-name">Stage 2 &middot; Parse</div>
-              <div class="stage-comps">Parser, Chunker</div>
-            </div>
-            <div class="stage-arrow">&#8594;</div>
-            <div class="stage-box">
-              <div class="stage-name">Stage 3 &middot; Index</div>
-              <div class="stage-comps">Summarizer, Embedder, EntityExt, GraphRegistrar</div>
-            </div>
-          </div>
+              ┌────────────────┴────────────────┐
+              │ ① artifact 경로                  │ ② span 경로
+              │ (평가 워커가 읽는 유일한 소스)      │ (대시보드 전용)
+              ▼                                  ▼
+ ┌──────────────────────────┐    ┌──────────────────────────┐
+ │  Artifact + 실행 메타 저장  │    │  OTel Traces 방출         │
+ │  (파이프라인 기존 저장소)    │    │  (Base Class가 자동 계측)  │
+ │                          │    │                          │
+ │  S3/NFS:   body.md       │    │  OTLP ──→ 백엔드          │
+ │  Postgres: chunks        │    │  (Langfuse, Grafana 등)   │
+ │  GraphDB:  nodes, edges  │    │  시각화/모니터링 용도       │
+ │  + 소요시간, 토큰 수 등     │    │  꺼내오지 않음             │
+ └────────────┬─────────────┘    └──────────────────────────┘
+              │
+      파이프라인 워커 완료
+              │
+─ ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+              │ 비동기 트리거
+              │ (task chain / 스케줄 / 수동)
+              ▼
+═══════════════════════════════════════════════════════════════
+ L2  Evaluation Harness (평가 워커, 별도 프로세스)
+═══════════════════════════════════════════════════════════════
 
-          <div class="call-section">
-            <div class="call-trigger">Component __call__ 실행 시 &mdash; 두 경로로 동시 분기</div>
-            <div class="fork-row">
-              <div class="fork-path fork-primary">
-                <span class="fork-num">① S3 / DB</span>
-                <span class="fork-dest">artifact + 실행 메타 저장</span>
-                <span class="fork-note">평가 워커가 읽는 유일한 소스</span>
-              </div>
-              <div class="fork-path fork-secondary">
-                <span class="fork-num">② OTel Traces</span>
-                <span class="fork-dest">OTLP &rarr; 대시보드</span>
-                <span class="fork-note">시각화 전용, 꺼내오지 않음</span>
-              </div>
-            </div>
-          </div>
-        </div>
+   ① artifact + 실행 메타       golden/
+   S3/DB/GraphDB에서             (레퍼런스)
+   ID로 조회
+        │                            │
+        ▼                            ▼
+   ArtifactLoader               GoldenLoader
+        │                            │
+        └────────────┬───────────────┘
+                     │
+                     ▼
+             Evaluator (YAML + Registry)
+             ┌───────┴────────┐
+             ▼                ▼
+       결과물 품질         실행 품질
+       ParserEval         LatencyEval
+       ChunkerEval        CostEval
+       EntityEval
+       GraphEval
+             └───────┬────────┘
+                     │
+                     ▼
+             Group 집계 (YAML)
+                     │
+                     ▼
+             OTel Metrics 방출  ──→ OTLP ──→ 백엔드
+             (평가 결과도 벤더 중립)
 
-        <!-- 비동기 경계선 -->
-        <div class="async-connector">
-          <div class="async-line"></div>
-          <div class="async-badge">비동기 트리거 &nbsp;&mdash; &mdash; &mdash;</div>
-          <div class="async-line"></div>
-        </div>
+═══════════════════════════════════════════════════════════════
+ L3  Continuous Evaluation
+═══════════════════════════════════════════════════════════════
 
-        <!-- L2 Evaluation Harness (중간) -->
-        <div class="layer-block lb-active">
-          <div class="lb-label">
-            <span>L2</span>
-            <span class="lname">Evaluation Harness</span>
-            <span class="lsub">— 평가 워커, 별도 프로세스</span>
-          </div>
+       L2 평가 워커를 언제, 어떤 범위로 트리거하는가
 
-          <div class="l2-pipeline">
-            <div class="l2-node">
-              <div class="l2-node-name">ArtifactLoader</div>
-              <div class="l2-node-sub">S3/DB에서<br>아티팩트 로드</div>
-            </div>
-            <div class="l2-arrow" style="font-size:11px;color:var(--border-hi);">+</div>
-            <div class="l2-node">
-              <div class="l2-node-name">GoldenLoader</div>
-              <div class="l2-node-sub">정답 데이터<br>로드</div>
-            </div>
-            <div class="l2-arrow">&#8594;</div>
-            <div class="l2-node">
-              <div class="l2-node-name">Evaluator</div>
-              <div class="l2-node-sub">평가 단위<br>실행</div>
-            </div>
-            <div class="l2-arrow">&#8594;</div>
-            <div class="l2-node">
-              <div class="l2-node-name">Group</div>
-              <div class="l2-node-sub">Evaluator<br>집계</div>
-            </div>
-          </div>
-
-          <div class="l2-emit">
-            <span class="l2-emit-label">OTel Metrics</span>
-            <span class="l2-emit-arrow">&#8594;</span>
-            <span>OTLP 방출</span>
-            <span class="l2-emit-arrow">&#8594;</span>
-            <span style="color:var(--text-mute);">백엔드 (Langfuse / Grafana / 자체&hellip;)</span>
-          </div>
-        </div>
-
-        <!-- L1 → L2 커넥터 -->
-        <div class="flow-connector" style="min-height:24px;">
-          <div class="conn-line"></div>
-          <div class="conn-arrow">&#8595;</div>
-          <div class="conn-line"></div>
-        </div>
-
-        <!-- L3 Continuous Evaluation (맨 아래) -->
-        <div class="layer-block lb-neutral">
-          <div class="lb-label">
-            <span>L3</span>
-            <span class="lname">Continuous Evaluation</span>
-            <span class="lsub">— 언제 평가하는가</span>
-          </div>
-          <div class="l3-chips">
-            <span class="l3-chip">Local (dev)</span>
-            <span class="l3-chip">CI (PR gate)</span>
-            <span class="l3-chip">Nightly (full suite)</span>
-            <span class="l3-chip">Shadow (prod traffic)</span>
-          </div>
-        </div>
-
+      Local ───── CI ───── Nightly ───── Shadow
+      (수동)     (PR)     (스케줄)     (프로덕션 샘플링)
+</pre>
       </div>
 
       <!-- 횡단 인프라 사이드바 -->
       <div class="infra-sidebar">
-
         <div class="infra-panel">
           <div class="infra-panel-header">L1 + L2 횡단 인프라</div>
           <div class="infra-items">
@@ -1096,7 +549,6 @@
             </div>
           </div>
         </div>
-
         <div class="infra-panel">
           <div class="infra-panel-header">L1 전용 인프라</div>
           <div class="infra-items">
@@ -1116,9 +568,7 @@
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
   </section>
 
@@ -1135,43 +585,20 @@
       <div class="card">
         <div class="card-head">
           <span class="card-tag">컴포넌트 격리</span>
-          <div class="card-title">컴포넌트를 바꿔도<br>평가는 안 깨진다</div>
+          <div class="card-title">컴포넌트를 바꿔도 평가는 안 깨진다</div>
         </div>
-
-        <!-- 소형 그림 1: 상속 트리 -->
         <div class="card-diagram">
-          <div class="diag-base-class">
-            <div class="diag-bc-name">Component Base Class</div>
-            <div class="diag-bc-methods">
-              <span class="mfixed">__call__()&nbsp;</span><span style="color:var(--text-mute);font-size:9px;">계측 + 에러처리 (고정)</span><br>
-              <span class="mreplace">_run()&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:var(--text-mute);font-size:9px;">순수 로직 (교체 가능)</span>
-            </div>
-          </div>
-          <div class="diag-tree-stem"></div>
-          <div class="diag-inherit-label">상속</div>
-          <div class="diag-tree-horiz" style="display:flex;gap:5px;position:relative;">
-            <div style="position:absolute;top:0;left:calc(16px + 5px);right:calc(16px + 5px);height:1px;background:var(--border-hi);"></div>
-            <div class="diag-tree-col">
-              <div class="diag-tree-vert"></div>
-              <div class="diag-leaf">Parser</div>
-            </div>
-            <div class="diag-tree-col" style="flex:1;align-items:center;">
-              <div class="diag-tree-vert"></div>
-              <div class="diag-leaf">Chunker</div>
-            </div>
-            <div class="diag-tree-col" style="align-items:flex-end;">
-              <div class="diag-tree-vert"></div>
-              <div class="diag-leaf">Embedder</div>
-            </div>
-          </div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--text-mute);text-align:center;margin-top:7px;">
-            교체해도 <span style="color:var(--accent);font-weight:600;">평가 무수정</span>
-          </div>
+<pre>Component Base Class
+  __call__(): 계측+에러처리 (고정)
+  _run():     순수 로직 (교체 가능)
+       │ 상속
+  ┌────┼────┐
+  Parser  Chunker  Embedder …
+  (교체해도 평가 무수정)</pre>
         </div>
-
         <div class="card-body">
-          <div class="card-item">모든 컴포넌트가 같은 Base Class를 상속하므로 평가가 보는 인터페이스가 <strong>불변</strong></div>
-          <div class="card-item">교체하려면? <strong>_run()만</strong> 새로 구현. 평가 코드 무수정.</div>
+          <div class="card-item">모든 컴포넌트가 같은 Base Class를 상속 → 평가가 보는 <strong>인터페이스가 불변</strong></div>
+          <div class="card-item">컴포넌트 교체? <strong>_run()만 새로 구현</strong>. 평가 코드 무수정.</div>
         </div>
       </div>
 
@@ -1181,38 +608,17 @@
           <span class="card-tag">확장성</span>
           <div class="card-title">평가 항목을 YAML 한 장으로 추가한다</div>
         </div>
-
-        <!-- 소형 그림 2: Registry 흐름 -->
         <div class="card-diagram">
-          <div class="diag-flow-row">
-            <div class="diag-box diag-box-accent">YAML</div>
-            <div class="diag-flow-arrow">&#8594;</div>
-            <div class="diag-box diag-box-gray" style="font-size:9.5px;">metric: <span style="color:var(--accent);">chrf_plus</span></div>
-          </div>
-          <div style="display:flex;align-items:center;padding:2px 0 2px 20px;">
-            <div style="width:1px;height:14px;background:var(--border-hi);"></div>
-            <div style="font-family:var(--mono);font-size:8.5px;color:var(--text-mute);padding-left:6px;">문자열로 바인딩</div>
-          </div>
-          <div class="diag-flow-row">
-            <div class="diag-box diag-box-accent">Registry</div>
-            <div class="diag-flow-arrow">&#8594;</div>
-            <div class="diag-box diag-box-gray" style="font-size:9px;color:var(--text-mute);">chrf_plus &rarr; ChrFPlus<br>teds &rarr; TEDS &nbsp;&nbsp;…</div>
-          </div>
-          <div style="display:flex;align-items:center;padding:2px 0 2px 20px;">
-            <div style="width:1px;height:14px;background:var(--border-hi);"></div>
-            <div style="font-family:var(--mono);font-size:8.5px;color:var(--text-mute);padding-left:6px;">클래스 바인딩</div>
-          </div>
-          <div class="diag-flow-row">
-            <div class="diag-box diag-box-gray">ChrFPlus.compute()</div>
-            <div class="diag-flow-arrow">&#8594;</div>
-            <div class="diag-box diag-box-accent" style="font-size:11px;">0.91</div>
-          </div>
+<pre>YAML: metric: chrf_plus
+       │ 문자열
+Registry: {"chrf_plus": ChrFPlus, …}
+       │ 클래스 바인딩
+ChrFPlus.compute() → 0.91</pre>
         </div>
-
         <div class="card-body">
-          <div class="card-item">Registry가 이름으로 클래스를 찾아주므로 YAML에 <strong>이름만</strong> 쓰면 됨</div>
-          <div class="card-item">새 메트릭 추가? <strong>metrics/ 파일</strong> + YAML 한 줄. 코어 무수정.</div>
-          <div class="card-item">새 Evaluator? <strong>evaluators/ 클래스</strong> + YAML 한 장.</div>
+          <div class="card-item">Registry가 <strong>이름으로 클래스를 연결</strong> → YAML에 이름만 쓰면 됨</div>
+          <div class="card-item">새 메트릭? <strong>metrics/ 파일 + YAML 한 줄</strong>. 코어 무수정.</div>
+          <div class="card-item">새 Evaluator? <strong>evaluators/ 클래스 + YAML 한 장</strong>.</div>
         </div>
       </div>
 
@@ -1222,40 +628,18 @@
           <span class="card-tag">벤더 독립</span>
           <div class="card-title">대시보드를 자유롭게 바꿀 수 있다</div>
         </div>
-
-        <!-- 소형 그림 3: OTLP 분기 -->
         <div class="card-diagram">
-          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:6px;">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <div class="diag-box diag-box-gray" style="flex:1;text-align:center;">L1 Pipeline</div>
-              <div class="diag-flow-arrow">&#8594;</div>
-              <div class="diag-box diag-box-gray" style="font-size:9.5px;">OTel Traces</div>
-              <div style="width:18px;height:1px;background:var(--border-hi);"></div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <div class="diag-box diag-box-accent" style="flex:1;text-align:center;">L2 Evaluator</div>
-              <div class="diag-flow-arrow">&#8594;</div>
-              <div class="diag-box diag-box-gray" style="font-size:9.5px;">OTel Metrics</div>
-              <div style="width:18px;height:1px;background:var(--border-hi);"></div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-            <div style="flex:1;"></div>
-            <div style="flex:1;"></div>
-            <div class="diag-otlp-hub">OTLP</div>
-            <div class="diag-flow-arrow">&#8594;</div>
-            <div style="font-family:var(--mono);font-size:9px;color:var(--text-mute);">?</div>
-          </div>
-          <div style="display:flex;gap:5px;padding-left:8px;">
-            <div class="diag-target-box">CLI<small style="color:var(--accent);">지금</small></div>
-            <div class="diag-target-box">Langfuse<small>다음</small></div>
-            <div class="diag-target-box">자체<small>나중</small></div>
-          </div>
+<pre>L1 Pipeline  → OTel Traces  ─┐
+                              ├→ OTLP → ?
+L2 Evaluator → OTel Metrics ─┘
+                                   │
+                            ┌──────┼──────┐
+                           CLI  Langfuse  자체
+                          (지금)  (다음)  (나중)</pre>
         </div>
-
         <div class="card-body">
-          <div class="card-item">OTLP 공용 규격으로 방출하므로 <strong>받는 쪽을 자유롭게 교체</strong></div>
-          <div class="card-item">평가 워커는 백엔드에서 데이터를 꺼내오지 않으므로 <strong>종속 자체가 없음</strong></div>
+          <div class="card-item"><strong>OTLP 공용 규격</strong>으로 보내기만 → 받는 쪽 자유롭게 교체</div>
+          <div class="card-item">평가 워커는 백엔드에서 데이터를 꺼내오지 않음 → <strong>종속 자체가 없음</strong></div>
         </div>
       </div>
 
@@ -1269,35 +653,30 @@
       <span class="sec-title">추후 과제</span>
       <span class="sec-line"></span>
     </div>
-
-    <div class="todo-grid">
-
-      <div class="todo-group">
-        <div class="todo-group-title">평가 체계 상세화</div>
-        <ul class="todo-list">
-          <li>YAML 필드 명세 <span style="color:var(--text-mute);font-size:11.5px;">(depth별 평가 분기, 가중치 정의 등)</span></li>
-          <li>그래프 평가 구체화 <span style="color:var(--text-mute);font-size:11.5px;">(golden 형태, entity 매칭 전략)</span></li>
-          <li>회귀 판정 상세 정책 <span style="color:var(--text-mute);font-size:11.5px;">(baseline 저장, 임계값, 통계 검정)</span></li>
+    <div class="future-grid">
+      <div class="future-card">
+        <div class="future-title">평가 체계 상세화</div>
+        <ul class="future-list">
+          <li>YAML 필드 명세 (depth별 평가 분기, 가중치 정의 등)</li>
+          <li>그래프 평가 구체화 (golden 형태, entity 매칭 전략)</li>
+          <li>회귀 판정 상세 정책 (baseline 저장, 임계값, 통계 검정)</li>
         </ul>
       </div>
-
-      <div class="todo-group">
-        <div class="todo-group-title">운영 연동</div>
-        <ul class="todo-list">
+      <div class="future-card">
+        <div class="future-title">운영 연동</div>
+        <ul class="future-list">
           <li>CI/CD 도구 선정 및 연동</li>
-          <li>Golden 관리 체계 <span style="color:var(--text-mute);font-size:11.5px;">(작성&rarr;리뷰&rarr;승인 워크플로)</span></li>
-          <li>통합 인터페이스 <span style="color:var(--text-mute);font-size:11.5px;">(대시보드 UI, Claude Code 연동 등)</span></li>
+          <li>Golden 관리 체계 (작성→리뷰→승인 워크플로)</li>
+          <li>통합 인터페이스 (대시보드 UI, Claude Code 연동 등)</li>
         </ul>
       </div>
-
-      <div class="todo-group">
-        <div class="todo-group-title">파이프라인 연동</div>
-        <ul class="todo-list">
-          <li>실행 메타 저장 경로 확정 <span style="color:var(--text-mute);font-size:11.5px;">(소요시간, 토큰 수)</span></li>
+      <div class="future-card">
+        <div class="future-title">파이프라인 연동</div>
+        <ul class="future-list">
+          <li>실행 메타(소요시간, 토큰 수) 저장 경로 확정</li>
           <li>병렬 실행 구간 실패 정책</li>
         </ul>
       </div>
-
     </div>
   </section>
 
