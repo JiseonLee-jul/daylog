@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>측정 루프를 설계한다 — Evaluation Harness</title>
+<title>Evaluation Harness</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
 
   :root {
     --bg:         #ffffff;
     --bg-1:       #f8f9fb;
-    --bg-2:       #f0f2f6;
+    --bg-2:       #f0f2f5;
+    --bg-3:       #e6e9ee;
     --border:     #dde0e8;
     --border-hi:  #c4c9d8;
 
@@ -18,33 +19,10 @@
     --text-dim:   #46526b;
     --text-mute:  #8a94a8;
 
-    /* L1 — Green */
-    --g:          #1b6f38;
-    --g-mid:      #2a9152;
-    --g-bg:       #f0faf4;
-    --g-border:   #a8d9b8;
-
-    /* L2 — Amber */
-    --a:          #9a5d00;
-    --a-mid:      #c47a0a;
-    --a-bg:       #fdf8f0;
-    --a-border:   #e5c880;
-
-    /* L3 — Teal */
-    --t:          #0c6e7a;
-    --t-mid:      #0e8fa0;
-    --t-bg:       #f0fafb;
-    --t-border:   #7fd3dc;
-
-    /* OTel accent */
-    --otel:       #5b3fbe;
-    --otel-bg:    #f4f1fd;
-    --otel-border:#c3b4f0;
-
-    /* Storage accent */
-    --stor:       #1a4f8a;
-    --stor-bg:    #f0f5fc;
-    --stor-border:#a8c4e8;
+    --accent:     #b37400;
+    --accent-mid: #d49000;
+    --accent-bg:  #fdf8f0;
+    --accent-border: #e5c880;
 
     --mono: 'IBM Plex Mono', 'Consolas', monospace;
     --sans: 'Noto Sans KR', -apple-system, 'Malgun Gothic', sans-serif;
@@ -75,7 +53,7 @@
     font-size: 9.5px;
     font-weight: 600;
     letter-spacing: 3.5px;
-    color: var(--a-mid);
+    color: var(--accent);
     text-transform: uppercase;
     margin-bottom: 10px;
     display: block;
@@ -90,7 +68,7 @@
   }
   h1 em {
     font-style: normal;
-    color: var(--a-mid);
+    color: var(--accent);
   }
   .header-meta {
     font-family: var(--mono);
@@ -110,9 +88,9 @@
     font-weight: 600;
     padding: 2px 8px;
     border-radius: 3px;
-    background: var(--a-bg);
-    border: 1px solid var(--a-border);
-    color: var(--a);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
     letter-spacing: 0.5px;
     text-transform: uppercase;
   }
@@ -128,13 +106,12 @@
     font-family: var(--mono);
     font-size: 9.5px;
     font-weight: 600;
-    color: var(--a-mid);
-    background: var(--a-bg);
-    border: 1px solid var(--a-border);
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
     border-radius: 3px;
     padding: 2px 8px;
     letter-spacing: 1px;
-    white-space: nowrap;
   }
   .sec-title {
     font-size: 15px;
@@ -146,25 +123,56 @@
 
   section { margin-bottom: 48px; }
 
-  /* ── 섹션 1: 목적 ── */
+  /* ── 섹션 1: 목적 + 요구사항 ── */
   .purpose-block {
     background: var(--bg-1);
     border: 1px solid var(--border);
-    border-left: 3px solid var(--a-mid);
+    border-left: 3px solid var(--accent-mid);
     border-radius: var(--radius);
     padding: 18px 22px;
     font-size: 13.5px;
     line-height: 1.85;
     color: var(--text);
+    margin-bottom: 16px;
   }
-  .purpose-block strong { color: var(--a); font-weight: 600; }
+  .purpose-block strong { color: var(--accent); font-weight: 600; }
+
+  .req-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 720px) {
+    .req-grid { grid-template-columns: 1fr; }
+  }
+  .req-item {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .req-id {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .req-text {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .req-text strong { color: var(--text); font-weight: 600; }
 
   /* ══════════════════════════════════════════
      섹션 2: 아키텍처 플로우차트
   ══════════════════════════════════════════ */
   .arch-outer {
     display: grid;
-    grid-template-columns: 1fr 220px;
+    grid-template-columns: 1fr 210px;
     gap: 16px;
     align-items: start;
   }
@@ -172,7 +180,6 @@
     .arch-outer { grid-template-columns: 1fr; }
   }
 
-  /* 메인 플로우 컬럼 */
   .arch-flow {
     background: var(--bg-1);
     border: 1px solid var(--border);
@@ -180,26 +187,19 @@
     padding: 24px 20px;
     display: flex;
     flex-direction: column;
-    gap: 0;
   }
 
-  /* 각 계층 블록 */
   .layer-block {
     border-radius: var(--radius);
     padding: 14px 16px 16px;
-    position: relative;
   }
-  .lb-l1 {
-    background: var(--g-bg);
-    border: 1.5px solid var(--g-border);
+  .lb-active {
+    background: var(--accent-bg);
+    border: 1.5px solid var(--accent-border);
   }
-  .lb-l2 {
-    background: var(--a-bg);
-    border: 1.5px solid var(--a-border);
-  }
-  .lb-l3 {
-    background: var(--t-bg);
-    border: 1.5px solid var(--t-border);
+  .lb-neutral {
+    background: var(--bg-2);
+    border: 1.5px solid var(--border-hi);
   }
 
   .lb-label {
@@ -213,15 +213,13 @@
     align-items: center;
     gap: 7px;
   }
-  .lb-l1 .lb-label { color: var(--g); }
-  .lb-l2 .lb-label { color: var(--a); }
-  .lb-l3 .lb-label { color: var(--t); }
+  .lb-active .lb-label { color: var(--accent); }
+  .lb-neutral .lb-label { color: var(--text-mute); }
   .lb-label .lname {
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: -0.2px;
     font-family: var(--sans);
-    opacity: 1;
   }
   .lb-label .lsub {
     font-size: 10px;
@@ -232,7 +230,7 @@
     margin-left: 2px;
   }
 
-  /* L1 파이프라인 스테이지 */
+  /* L1 스테이지 */
   .pipeline-stages {
     display: flex;
     align-items: center;
@@ -242,7 +240,7 @@
   }
   .stage-box {
     background: var(--bg);
-    border: 1px solid var(--g-border);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 8px 12px;
     flex: 1;
@@ -252,17 +250,17 @@
     font-family: var(--mono);
     font-size: 10.5px;
     font-weight: 600;
-    color: var(--g);
+    color: var(--text-dim);
     margin-bottom: 4px;
   }
   .stage-comps {
     font-size: 11px;
-    color: var(--text-dim);
+    color: var(--text-mute);
     line-height: 1.45;
   }
   .stage-arrow {
     font-size: 14px;
-    color: var(--g-border);
+    color: var(--border-hi);
     padding: 0 6px;
     flex-shrink: 0;
   }
@@ -270,7 +268,7 @@
   /* __call__ 분기 */
   .call-section {
     background: var(--bg);
-    border: 1px solid var(--g-border);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 10px 14px;
   }
@@ -278,7 +276,7 @@
     font-family: var(--mono);
     font-size: 11px;
     font-weight: 600;
-    color: var(--g);
+    color: var(--text-dim);
     margin-bottom: 8px;
     display: flex;
     align-items: center;
@@ -289,7 +287,7 @@
     display: inline-block;
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--g-mid);
+    background: var(--accent-mid);
     flex-shrink: 0;
   }
   .fork-row {
@@ -306,13 +304,13 @@
     flex-direction: column;
     gap: 3px;
   }
-  .fork-path-1 {
-    background: var(--stor-bg);
-    border: 1px solid var(--stor-border);
+  .fork-primary {
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
   }
-  .fork-path-2 {
-    background: var(--otel-bg);
-    border: 1px solid var(--otel-border);
+  .fork-secondary {
+    background: var(--bg-2);
+    border: 1px solid var(--border-hi);
   }
   .fork-num {
     font-family: var(--mono);
@@ -320,8 +318,8 @@
     font-weight: 600;
     margin-bottom: 2px;
   }
-  .fork-path-1 .fork-num { color: var(--stor); }
-  .fork-path-2 .fork-num { color: var(--otel); }
+  .fork-primary .fork-num { color: var(--accent); }
+  .fork-secondary .fork-num { color: var(--text-mute); }
   .fork-dest {
     font-weight: 600;
     color: var(--text);
@@ -333,14 +331,13 @@
     font-style: italic;
   }
 
-  /* 플로우 커넥터들 */
+  /* 커넥터 */
   .flow-connector {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 6px 0;
     gap: 2px;
-    position: relative;
   }
   .conn-line {
     width: 1.5px;
@@ -352,18 +349,6 @@
     color: var(--border-hi);
     line-height: 1;
   }
-  .conn-label {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    color: var(--text-mute);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 2px 10px;
-    white-space: nowrap;
-    letter-spacing: 0.3px;
-  }
-
   .async-connector {
     display: flex;
     align-items: center;
@@ -374,13 +359,7 @@
   .async-line {
     flex: 1;
     height: 1.5px;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--border-hi) 0px,
-      var(--border-hi) 5px,
-      transparent 5px,
-      transparent 10px
-    );
+    background: repeating-linear-gradient(90deg, var(--border-hi) 0px, var(--border-hi) 5px, transparent 5px, transparent 10px);
   }
   .async-badge {
     font-family: var(--mono);
@@ -395,7 +374,7 @@
     letter-spacing: 0.5px;
   }
 
-  /* L2 Harness 내부 */
+  /* L2 내부 */
   .l2-pipeline {
     display: flex;
     align-items: center;
@@ -404,7 +383,7 @@
   }
   .l2-node {
     background: var(--bg);
-    border: 1px solid var(--a-border);
+    border: 1px solid var(--accent-border);
     border-radius: 4px;
     padding: 7px 11px;
     font-size: 11.5px;
@@ -416,7 +395,7 @@
     font-family: var(--mono);
     font-size: 10.5px;
     font-weight: 600;
-    color: var(--a);
+    color: var(--accent);
     margin-bottom: 2px;
   }
   .l2-node-sub {
@@ -426,15 +405,14 @@
   }
   .l2-arrow {
     font-size: 13px;
-    color: var(--a-border);
+    color: var(--accent-border);
     padding: 0 5px;
     flex-shrink: 0;
   }
-
   .l2-emit {
     margin-top: 10px;
-    background: var(--otel-bg);
-    border: 1px solid var(--otel-border);
+    background: var(--bg-2);
+    border: 1px solid var(--border-hi);
     border-radius: 4px;
     padding: 8px 12px;
     font-size: 11.5px;
@@ -447,12 +425,12 @@
     font-family: var(--mono);
     font-size: 10px;
     font-weight: 600;
-    color: var(--otel);
+    color: var(--text-dim);
     white-space: nowrap;
   }
-  .l2-emit-arrow { color: var(--otel-border); font-size: 13px; }
+  .l2-emit-arrow { color: var(--border-hi); font-size: 13px; }
 
-  /* L3 트리거 */
+  /* L3 칩 */
   .l3-chips {
     display: flex;
     gap: 7px;
@@ -464,8 +442,8 @@
     padding: 5px 12px;
     border-radius: 3px;
     background: var(--bg);
-    border: 1px solid var(--t-border);
-    color: var(--t);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
     font-weight: 500;
   }
 
@@ -512,9 +490,8 @@
     flex-shrink: 0;
     margin-top: 4px;
   }
-  .dot-otel  { background: var(--otel); }
-  .dot-stor  { background: var(--stor); }
-  .dot-green { background: var(--g-mid); }
+  .dot-accent { background: var(--accent-mid); }
+  .dot-gray   { background: var(--text-mute); }
 
   /* ── 섹션 3: 카드 ── */
   .cards {
@@ -528,6 +505,7 @@
   .card {
     background: var(--bg-1);
     border: 1px solid var(--border);
+    border-top: 3px solid var(--accent-mid);
     border-radius: var(--radius);
     padding: 0;
     display: flex;
@@ -544,12 +522,10 @@
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
+    color: var(--accent);
     margin-bottom: 6px;
     display: block;
   }
-  .card-tag-g  { color: var(--g); }
-  .card-tag-a  { color: var(--a); }
-  .card-tag-t  { color: var(--t); }
   .card-title {
     font-size: 13.5px;
     font-weight: 700;
@@ -578,9 +554,6 @@
     color: var(--text-mute);
   }
   .card-item strong { color: var(--text); font-weight: 600; }
-  .card-accent-g { border-top: 3px solid var(--g-mid); }
-  .card-accent-a { border-top: 3px solid var(--a-mid); }
-  .card-accent-t { border-top: 3px solid var(--t-mid); }
 
   /* ── 섹션 4: 표 ── */
   .table-wrap {
@@ -628,7 +601,7 @@
     border: 1px solid var(--border);
     border-radius: 2px;
     padding: 1px 6px;
-    color: var(--t);
+    color: var(--accent);
   }
 
   /* ── FOOTER ── */
@@ -647,9 +620,9 @@
     color: var(--text-mute);
   }
   .footer-ref a {
-    color: var(--a-mid);
+    color: var(--accent);
     text-decoration: none;
-    border-bottom: 1px solid var(--a-border);
+    border-bottom: 1px solid var(--accent-border);
   }
   .footer-date {
     font-family: var(--mono);
@@ -663,8 +636,8 @@
 
   <!-- HEADER -->
   <header>
-    <span class="header-tag">KMS &middot; Evaluation Harness &middot; Design Summary</span>
-    <h1>측정 루프를 설계한다 — <em>Evaluation Harness</em></h1>
+    <span class="header-tag">KMS &middot; Design Summary</span>
+    <h1><em>Evaluation Harness</em></h1>
     <div class="header-meta">
       <b>Author</b>&nbsp;이지선
       <span class="sep">&nbsp;&middot;&nbsp;</span>
@@ -675,7 +648,7 @@
     </div>
   </header>
 
-  <!-- 섹션 1: 목적 -->
+  <!-- 섹션 1: 목적 + 요구사항 -->
   <section>
     <div class="sec-label">
       <span class="sec-num">01</span>
@@ -683,8 +656,34 @@
       <span class="sec-line"></span>
     </div>
     <div class="purpose-block">
-      KMS는 단번의 설계로 완성되지 않는다. 컴포넌트를 교체·개선하며 점진적으로 발전시키는 체계가 필요하다.
-      그 중심에 <strong>Evaluation Harness</strong> — 빠르게 측정하고, 해석하고, 개선을 검증하는 루프 — 가 있다.
+      KMS는 단번의 설계로 완성되지 않는다. 설계하고, 실 데이터에 부딪히고, 문제를 발견하고, 컴포넌트를 뜯어 고치는 과정이 반복될 수밖에 없다.
+      따라서 핵심은 <strong>문제를 빠르게 판단하고, 원인을 분석하고, 개선을 검증하는 루프</strong>를 체계적으로 갖추는 것이며, 그 중심에 <strong>Evaluation Harness</strong>가 있다.
+    </div>
+    <div class="req-grid">
+      <div class="req-item">
+        <span class="req-id">R1 컴포넌트 독립</span>
+        <div class="req-text">컴포넌트가 교체되어도 평가 <strong>코어는 무수정</strong>. Evaluator만 유일한 수정 지점.</div>
+      </div>
+      <div class="req-item">
+        <span class="req-id">R2 파이프라인 + 그래프</span>
+        <div class="req-text">파이프라인 각 단계와 Knowledge Graph <strong>둘 다</strong> 평가.</div>
+      </div>
+      <div class="req-item">
+        <span class="req-id">R3 인터페이스 변화 내성</span>
+        <div class="req-text">필드는 바뀌어도 <strong>흐름 구조에만 결합</strong>. 변경 영향 최소화.</div>
+      </div>
+      <div class="req-item">
+        <span class="req-id">R4 분산 실행 대응</span>
+        <div class="req-text">로컬과 <strong>Celery 분산 환경</strong> 모두에서 일관 동작.</div>
+      </div>
+      <div class="req-item">
+        <span class="req-id">R5 장기 확장</span>
+        <div class="req-text">개발 도구에서 출발, <strong>운영 관측·감사 대시보드</strong>의 기반으로 확장.</div>
+      </div>
+      <div class="req-item">
+        <span class="req-id">R6 회귀 판정 + 재현성</span>
+        <div class="req-text">결정적 메트릭은 즉시 차단, 비결정적 메트릭은 <strong>통계적 판정</strong>.</div>
+      </div>
     </div>
   </section>
 
@@ -702,7 +701,7 @@
       <div class="arch-flow">
 
         <!-- L3 -->
-        <div class="layer-block lb-l3">
+        <div class="layer-block lb-neutral">
           <div class="lb-label">
             <span>L3</span>
             <span class="lname">Continuous Evaluation</span>
@@ -723,7 +722,7 @@
         </div>
 
         <!-- L2 -->
-        <div class="layer-block lb-l2">
+        <div class="layer-block lb-active">
           <div class="lb-label">
             <span>L2</span>
             <span class="lname">Evaluation Harness</span>
@@ -773,41 +772,39 @@
         </div>
 
         <!-- L1 -->
-        <div class="layer-block lb-l1">
+        <div class="layer-block lb-neutral">
           <div class="lb-label">
             <span>L1</span>
             <span class="lname">Pipeline</span>
             <span class="lsub">— 파이프라인 워커</span>
           </div>
 
-          <!-- Stages -->
           <div class="pipeline-stages">
             <div class="stage-box">
               <div class="stage-name">Stage 1 · Ingest</div>
-              <div class="stage-comps">Crawler, Fetcher, Validator</div>
+              <div class="stage-comps">FileStore, DedupChecker, DepthResolver</div>
             </div>
             <div class="stage-arrow">&#8594;</div>
             <div class="stage-box">
               <div class="stage-name">Stage 2 · Parse</div>
-              <div class="stage-comps">Docling / Marker, Cleaner</div>
+              <div class="stage-comps">Parser, Chunker</div>
             </div>
             <div class="stage-arrow">&#8594;</div>
             <div class="stage-box">
               <div class="stage-name">Stage 3 · Index</div>
-              <div class="stage-comps">Embedder, VectorStore</div>
+              <div class="stage-comps">Summarizer, Embedder, EntityExt, GraphRegistrar</div>
             </div>
           </div>
 
-          <!-- __call__ 분기 -->
           <div class="call-section">
             <div class="call-trigger">Component __call__ 실행 시 — 두 경로로 동시 분기</div>
             <div class="fork-row">
-              <div class="fork-path fork-path-1">
+              <div class="fork-path fork-primary">
                 <span class="fork-num">① S3 / DB</span>
                 <span class="fork-dest">artifact + 실행 메타 저장</span>
                 <span class="fork-note">평가 워커가 읽는 유일한 소스</span>
               </div>
-              <div class="fork-path fork-path-2">
+              <div class="fork-path fork-secondary">
                 <span class="fork-num">② OTel Traces</span>
                 <span class="fork-dest">OTLP → 대시보드</span>
                 <span class="fork-note">시각화 전용, 꺼내오지 않음</span>
@@ -816,7 +813,7 @@
           </div>
         </div>
 
-      </div><!-- /arch-flow -->
+      </div>
 
       <!-- 횡단 인프라 사이드바 -->
       <div class="infra-sidebar">
@@ -825,17 +822,17 @@
           <div class="infra-panel-header">L1 + L2 횡단 인프라</div>
           <div class="infra-items">
             <div class="infra-item">
-              <div class="infra-dot dot-otel"></div>
+              <div class="infra-dot dot-accent"></div>
               <div>
                 <div style="font-weight:600;color:var(--text);font-size:11.5px;">OTel</div>
                 <div style="font-size:11px;color:var(--text-mute);">Traces (L1) + Metrics (L2)</div>
               </div>
             </div>
             <div class="infra-item">
-              <div class="infra-dot dot-stor"></div>
+              <div class="infra-dot dot-accent"></div>
               <div>
                 <div style="font-weight:600;color:var(--text);font-size:11.5px;">Shared Storage</div>
-                <div style="font-size:11px;color:var(--text-mute);">S3 / DB<br>artifact + golden</div>
+                <div style="font-size:11px;color:var(--text-mute);">S3 / DB — artifact + golden</div>
               </div>
             </div>
           </div>
@@ -845,33 +842,25 @@
           <div class="infra-panel-header">L1 전용 인프라</div>
           <div class="infra-items">
             <div class="infra-item">
-              <div class="infra-dot dot-green"></div>
+              <div class="infra-dot dot-gray"></div>
               <div>
                 <div style="font-weight:600;color:var(--text);font-size:11.5px;">Celery Workers</div>
                 <div style="font-size:11px;color:var(--text-mute);">비동기 파이프라인 실행</div>
               </div>
             </div>
             <div class="infra-item">
-              <div class="infra-dot dot-green"></div>
+              <div class="infra-dot dot-gray"></div>
               <div>
                 <div style="font-weight:600;color:var(--text);font-size:11.5px;">Trace Context</div>
-                <div style="font-size:11px;color:var(--text-mute);">컨텍스트 전파 (propagation)</div>
+                <div style="font-size:11px;color:var(--text-mute);">워커 간 컨텍스트 전파</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div style="background:var(--bg-1);border:1px solid var(--border);border-radius:6px;padding:12px 14px;">
-          <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-mute);margin-bottom:8px;">읽는 방향</div>
-          <div style="font-size:11px;color:var(--text-dim);line-height:1.6;">
-            L3 트리거 → L2 평가 워커 → (비동기) L1 파이프라인 완료 후 실행.<br><br>
-            다이어그램은 <strong style="color:var(--text);">위 = 전략 레이어</strong>, <strong style="color:var(--text);">아래 = 실행 레이어</strong> 순서로 배치.
-          </div>
-        </div>
+      </div>
 
-      </div><!-- /infra-sidebar -->
-
-    </div><!-- /arch-outer -->
+    </div>
   </section>
 
   <!-- 섹션 3: 왜 빠른 루프인가 -->
@@ -883,9 +872,9 @@
     </div>
     <div class="cards">
 
-      <div class="card card-accent-g">
+      <div class="card">
         <div class="card-head">
-          <span class="card-tag card-tag-g">컴포넌트 격리</span>
+          <span class="card-tag">컴포넌트 격리</span>
           <div class="card-title">컴포넌트를 바꿔도<br>평가는 안 깨진다</div>
         </div>
         <div class="card-body">
@@ -895,9 +884,9 @@
         </div>
       </div>
 
-      <div class="card card-accent-a">
+      <div class="card">
         <div class="card-head">
-          <span class="card-tag card-tag-a">확장성</span>
+          <span class="card-tag">확장성</span>
           <div class="card-title">평가 항목을 YAML 한 장으로 추가한다</div>
         </div>
         <div class="card-body">
@@ -907,9 +896,9 @@
         </div>
       </div>
 
-      <div class="card card-accent-t">
+      <div class="card">
         <div class="card-head">
-          <span class="card-tag card-tag-t">벤더 독립</span>
+          <span class="card-tag">벤더 독립</span>
           <div class="card-title">대시보드를 자유롭게 바꿀 수 있다</div>
         </div>
         <div class="card-body">
