@@ -3,30 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KMS Evaluation Harness — 설계 요약</title>
+<title>측정 루프를 설계한다 — Evaluation Harness</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
 
   :root {
-    --bg:        #ffffff;
-    --bg-1:      #f7f8fa;
-    --bg-2:      #f0f2f5;
-    --bg-3:      #e8eaef;
-    --border:    #d8dbe3;
-    --border-hi: #c0c4d0;
-    --text:      #1a1d26;
-    --text-dim:  #4a5068;
-    --text-mute: #8890a5;
-    --yellow:    #c07d10;
-    --yellow-dk: #9a6400;
-    --yellow-bg: rgba(192,125,16,0.08);
-    --cyan:      #0e7c86;
-    --cyan-bg:   rgba(14,124,134,0.06);
-    --green:     #1a7a35;
-    --green-bg:  rgba(26,122,53,0.06);
-    --red:       #c03040;
+    --bg:         #ffffff;
+    --bg-1:       #f8f9fb;
+    --bg-2:       #f0f2f6;
+    --border:     #dde0e8;
+    --border-hi:  #c4c9d8;
+
+    --text:       #18202e;
+    --text-dim:   #46526b;
+    --text-mute:  #8a94a8;
+
+    /* L1 — Green */
+    --g:          #1b6f38;
+    --g-mid:      #2a9152;
+    --g-bg:       #f0faf4;
+    --g-border:   #a8d9b8;
+
+    /* L2 — Amber */
+    --a:          #9a5d00;
+    --a-mid:      #c47a0a;
+    --a-bg:       #fdf8f0;
+    --a-border:   #e5c880;
+
+    /* L3 — Teal */
+    --t:          #0c6e7a;
+    --t-mid:      #0e8fa0;
+    --t-bg:       #f0fafb;
+    --t-border:   #7fd3dc;
+
+    /* OTel accent */
+    --otel:       #5b3fbe;
+    --otel-bg:    #f4f1fd;
+    --otel-border:#c3b4f0;
+
+    /* Storage accent */
+    --stor:       #1a4f8a;
+    --stor-bg:    #f0f5fc;
+    --stor-border:#a8c4e8;
+
     --mono: 'IBM Plex Mono', 'Consolas', monospace;
     --sans: 'Noto Sans KR', -apple-system, 'Malgun Gothic', sans-serif;
+    --radius: 5px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,316 +59,462 @@
     font-family: var(--sans);
     font-size: 13.5px;
     line-height: 1.7;
-    padding: 48px 24px 64px;
+    padding: 44px 24px 60px;
   }
 
-  .doc { max-width: 1060px; margin: 0 auto; }
+  .doc { max-width: 1080px; margin: 0 auto; }
 
   /* ── HEADER ── */
   header {
     border-bottom: 1px solid var(--border);
-    padding-bottom: 24px;
-    margin-bottom: 48px;
+    padding-bottom: 22px;
+    margin-bottom: 44px;
   }
   .header-tag {
     font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 3px;
-    color: var(--yellow);
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 3.5px;
+    color: var(--a-mid);
     text-transform: uppercase;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     display: block;
   }
   h1 {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 700;
     letter-spacing: -0.5px;
     line-height: 1.25;
     color: var(--text);
     margin-bottom: 10px;
   }
-  h1 span {
-    color: var(--yellow);
+  h1 em {
+    font-style: normal;
+    color: var(--a-mid);
   }
   .header-meta {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--text-mute);
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    align-items: center;
   }
-  .header-meta b { color: var(--text-dim); }
+  .header-meta b { color: var(--text-dim); font-weight: 500; }
+  .header-meta .sep { color: var(--border-hi); }
+  .status-chip {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: var(--a-bg);
+    border: 1px solid var(--a-border);
+    color: var(--a);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
 
   /* ── SECTION TITLE ── */
   .sec-label {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 11px;
+    margin-bottom: 18px;
   }
   .sec-num {
     font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--yellow);
-    background: var(--yellow-bg);
-    border: 1px solid var(--yellow-dk);
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--a-mid);
+    background: var(--a-bg);
+    border: 1px solid var(--a-border);
     border-radius: 3px;
     padding: 2px 8px;
     letter-spacing: 1px;
     white-space: nowrap;
   }
   .sec-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--text);
     letter-spacing: -0.2px;
   }
-  .sec-line {
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  .sec-line { flex: 1; height: 1px; background: var(--border); }
 
-  section { margin-bottom: 52px; }
+  section { margin-bottom: 48px; }
 
   /* ── 섹션 1: 목적 ── */
   .purpose-block {
     background: var(--bg-1);
     border: 1px solid var(--border);
-    border-left: 3px solid var(--yellow);
-    border-radius: 4px;
-    padding: 20px 24px;
-    font-size: 14px;
+    border-left: 3px solid var(--a-mid);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    font-size: 13.5px;
     line-height: 1.85;
     color: var(--text);
   }
-  .purpose-block strong {
-    color: var(--yellow);
-    font-weight: 600;
+  .purpose-block strong { color: var(--a); font-weight: 600; }
+
+  /* ══════════════════════════════════════════
+     섹션 2: 아키텍처 플로우차트
+  ══════════════════════════════════════════ */
+  .arch-outer {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 16px;
+    align-items: start;
+  }
+  @media (max-width: 800px) {
+    .arch-outer { grid-template-columns: 1fr; }
   }
 
-  /* ── 섹션 2: 아키텍처 다이어그램 ── */
-  .arch-wrap {
+  /* 메인 플로우 컬럼 */
+  .arch-flow {
     background: var(--bg-1);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 28px 24px 32px;
-  }
-
-  .layer {
-    position: relative;
-    border-radius: 4px;
-    padding: 16px 20px 18px;
-    margin-bottom: 0;
-  }
-  .layer-label {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    font-weight: 500;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .layer-label .lnum {
-    font-size: 9px;
-    opacity: 0.6;
-  }
-
-  /* L3 */
-  .layer-l3 {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--cyan);
-    margin-bottom: 6px;
-  }
-  .layer-l3 .layer-label { color: var(--cyan); }
-
-  .trigger-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .trigger-chip {
-    font-family: var(--mono);
-    font-size: 11px;
-    padding: 4px 11px;
-    border-radius: 3px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-  }
-  .trigger-chip.active {
-    background: var(--cyan-bg);
-    border-color: var(--cyan);
-    color: var(--cyan);
-  }
-
-  /* L2 */
-  .layer-l2 {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--yellow);
-    margin-bottom: 6px;
-  }
-  .layer-l2 .layer-label { color: var(--yellow); }
-
-  .l2-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-  }
-  .l2-box {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 12px 14px;
-  }
-  .l2-box-title {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--yellow);
-    margin-bottom: 6px;
-  }
-  .l2-box-desc {
-    font-size: 11.5px;
-    color: var(--text-dim);
-    line-height: 1.55;
-  }
-
-  /* L1 */
-  .layer-l1 {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--green);
-    margin-bottom: 6px;
-  }
-  .layer-l1 .layer-label { color: var(--green); }
-
-  .l1-inner {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .l1-box {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 10px 14px;
-    flex: 1;
-    min-width: 160px;
-  }
-  .l1-box-title {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--green);
-    margin-bottom: 4px;
-  }
-  .l1-box-desc {
-    font-size: 11.5px;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
-
-  /* 횡단 인프라 */
-  .infra-band {
-    display: flex;
-    gap: 8px;
-    margin: 6px 0;
-    flex-wrap: wrap;
-  }
-  .infra-chip {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    padding: 5px 12px;
-    border-radius: 3px;
-    border: 1px dashed var(--border-hi);
-    color: var(--text-dim);
-    background: transparent;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .infra-chip .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .infra-chip.otel .dot { background: var(--cyan); }
-  .infra-chip.storage .dot { background: var(--yellow); }
-  .infra-chip.celery .dot { background: var(--green); }
-
-  /* 데이터 흐름 박스 */
-  .flow-box {
-    margin-top: 20px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 16px 20px;
-  }
-  .flow-box-title {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-mute);
-    margin-bottom: 12px;
-  }
-  .flow-steps {
+    padding: 24px 20px;
     display: flex;
     flex-direction: column;
+    gap: 0;
+  }
+
+  /* 각 계층 블록 */
+  .layer-block {
+    border-radius: var(--radius);
+    padding: 14px 16px 16px;
+    position: relative;
+  }
+  .lb-l1 {
+    background: var(--g-bg);
+    border: 1.5px solid var(--g-border);
+  }
+  .lb-l2 {
+    background: var(--a-bg);
+    border: 1.5px solid var(--a-border);
+  }
+  .lb-l3 {
+    background: var(--t-bg);
+    border: 1.5px solid var(--t-border);
+  }
+
+  .lb-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .lb-l1 .lb-label { color: var(--g); }
+  .lb-l2 .lb-label { color: var(--a); }
+  .lb-l3 .lb-label { color: var(--t); }
+  .lb-label .lname {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    font-family: var(--sans);
+    opacity: 1;
+  }
+  .lb-label .lsub {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0;
+    font-family: var(--sans);
+    color: var(--text-mute);
+    margin-left: 2px;
+  }
+
+  /* L1 파이프라인 스테이지 */
+  .pipeline-stages {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .stage-box {
+    background: var(--bg);
+    border: 1px solid var(--g-border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    flex: 1;
+    min-width: 100px;
+  }
+  .stage-name {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--g);
+    margin-bottom: 4px;
+  }
+  .stage-comps {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+  .stage-arrow {
+    font-size: 14px;
+    color: var(--g-border);
+    padding: 0 6px;
+    flex-shrink: 0;
+  }
+
+  /* __call__ 분기 */
+  .call-section {
+    background: var(--bg);
+    border: 1px solid var(--g-border);
+    border-radius: 4px;
+    padding: 10px 14px;
+  }
+  .call-trigger {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--g);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
     gap: 6px;
   }
-  .flow-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 12.5px;
+  .call-trigger::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--g-mid);
+    flex-shrink: 0;
   }
-  .flow-step-badge {
+  .fork-row {
+    display: flex;
+    gap: 10px;
+  }
+  .fork-path {
+    flex: 1;
+    border-radius: 3px;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .fork-path-1 {
+    background: var(--stor-bg);
+    border: 1px solid var(--stor-border);
+  }
+  .fork-path-2 {
+    background: var(--otel-bg);
+    border: 1px solid var(--otel-border);
+  }
+  .fork-num {
     font-family: var(--mono);
     font-size: 10px;
-    font-weight: 500;
-    padding: 2px 7px;
-    border-radius: 2px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    margin-top: 2px;
+    font-weight: 600;
+    margin-bottom: 2px;
   }
-  .badge-l1 { background: var(--green-bg); color: var(--green); border: 1px solid rgba(26,122,53,0.3); }
-  .badge-l2 { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(192,125,16,0.3); }
-  .badge-otel { background: var(--cyan-bg); color: var(--cyan); border: 1px solid rgba(14,124,134,0.3); }
-  .flow-step-text { color: var(--text-dim); line-height: 1.5; }
-  .flow-step-text em {
-    font-style: normal;
+  .fork-path-1 .fork-num { color: var(--stor); }
+  .fork-path-2 .fork-num { color: var(--otel); }
+  .fork-dest {
+    font-weight: 600;
     color: var(--text);
-    font-weight: 500;
+    font-size: 11.5px;
   }
-  .flow-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 6px 0;
+  .fork-note {
+    font-size: 10.5px;
+    color: var(--text-mute);
+    font-style: italic;
   }
-  .path-row {
+
+  /* 플로우 커넥터들 */
+  .flow-connector {
     display: flex;
-    gap: 6px;
-    align-items: flex-start;
-    margin-left: 24px;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0;
+    gap: 2px;
+    position: relative;
   }
-  .path-num {
+  .conn-line {
+    width: 1.5px;
+    background: var(--border-hi);
+    flex-grow: 1;
+  }
+  .conn-arrow {
+    font-size: 12px;
+    color: var(--border-hi);
+    line-height: 1;
+  }
+  .conn-label {
     font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--text-mute);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 10px;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
+
+  .async-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    gap: 8px;
+  }
+  .async-line {
+    flex: 1;
+    height: 1.5px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--border-hi) 0px,
+      var(--border-hi) 5px,
+      transparent 5px,
+      transparent 10px
+    );
+  }
+  .async-badge {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--text-mute);
+    background: var(--bg-2);
+    border: 1px dashed var(--border-hi);
+    border-radius: 3px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+
+  /* L2 Harness 내부 */
+  .l2-pipeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .l2-node {
+    background: var(--bg);
+    border: 1px solid var(--a-border);
+    border-radius: 4px;
+    padding: 7px 11px;
+    font-size: 11.5px;
+    text-align: center;
+    flex: 1;
+    min-width: 80px;
+  }
+  .l2-node-name {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--a);
+    margin-bottom: 2px;
+  }
+  .l2-node-sub {
     font-size: 10px;
     color: var(--text-mute);
-    flex-shrink: 0;
-    margin-top: 2px;
+    line-height: 1.3;
   }
+  .l2-arrow {
+    font-size: 13px;
+    color: var(--a-border);
+    padding: 0 5px;
+    flex-shrink: 0;
+  }
+
+  .l2-emit {
+    margin-top: 10px;
+    background: var(--otel-bg);
+    border: 1px solid var(--otel-border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 11.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dim);
+  }
+  .l2-emit-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--otel);
+    white-space: nowrap;
+  }
+  .l2-emit-arrow { color: var(--otel-border); font-size: 13px; }
+
+  /* L3 트리거 */
+  .l3-chips {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+  .l3-chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 3px;
+    background: var(--bg);
+    border: 1px solid var(--t-border);
+    color: var(--t);
+    font-weight: 500;
+  }
+
+  /* 횡단 인프라 사이드바 */
+  .infra-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .infra-panel {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .infra-panel-header {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 14px;
+  }
+  .infra-items {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .infra-item {
+    font-size: 11.5px;
+    color: var(--text-dim);
+    line-height: 1.45;
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+  }
+  .infra-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .dot-otel  { background: var(--otel); }
+  .dot-stor  { background: var(--stor); }
+  .dot-green { background: var(--g-mid); }
 
   /* ── 섹션 3: 카드 ── */
   .cards {
@@ -356,73 +524,71 @@
   }
   @media (max-width: 720px) {
     .cards { grid-template-columns: 1fr; }
-    .l2-inner { grid-template-columns: 1fr; }
   }
   .card {
     background: var(--bg-1);
     border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 20px;
+    border-radius: var(--radius);
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    overflow: hidden;
   }
   .card-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 12px;
+    padding: 14px 18px 13px;
     border-bottom: 1px solid var(--border);
   }
-  .card-icon {
-    width: 30px; height: 30px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-  .card-icon.yellow { background: var(--yellow-bg); }
-  .card-icon.cyan   { background: var(--cyan-bg); }
-  .card-icon.green  { background: var(--green-bg); }
-  .card-name {
+  .card-tag {
     font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
   }
-  .card-items {
-    list-style: none;
+  .card-tag-g  { color: var(--g); }
+  .card-tag-a  { color: var(--a); }
+  .card-tag-t  { color: var(--t); }
+  .card-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.35;
+    letter-spacing: -0.2px;
+  }
+  .card-body {
+    padding: 14px 18px;
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 8px;
+    flex: 1;
   }
-  .card-items li {
+  .card-item {
     font-size: 12.5px;
     color: var(--text-dim);
     line-height: 1.55;
-    padding-left: 14px;
+    padding-left: 13px;
     position: relative;
   }
-  .card-items li::before {
+  .card-item::before {
     content: '–';
     position: absolute;
     left: 0;
     color: var(--text-mute);
   }
-  .card-items li code {
-    font-family: var(--mono);
-    font-size: 11px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 0 5px;
-    color: var(--text);
-  }
-  .card-items li strong { color: var(--text); font-weight: 600; }
+  .card-item strong { color: var(--text); font-weight: 600; }
+  .card-accent-g { border-top: 3px solid var(--g-mid); }
+  .card-accent-a { border-top: 3px solid var(--a-mid); }
+  .card-accent-t { border-top: 3px solid var(--t-mid); }
 
   /* ── 섹션 4: 표 ── */
+  .table-wrap {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
   .dev-table {
     width: 100%;
     border-collapse: collapse;
@@ -431,8 +597,8 @@
   .dev-table th {
     text-align: left;
     font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
+    font-size: 9.5px;
+    font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--text-mute);
@@ -448,12 +614,12 @@
     line-height: 1.55;
   }
   .dev-table tr:last-child td { border-bottom: none; }
-  .dev-table tr:hover td { background: var(--bg-1); }
+  .dev-table tr:hover td { background: #f5f7fa; }
   .dev-table td:first-child {
     color: var(--text);
     font-weight: 500;
     white-space: nowrap;
-    width: 32%;
+    width: 34%;
   }
   .dev-table td code {
     font-family: var(--mono);
@@ -462,24 +628,18 @@
     border: 1px solid var(--border);
     border-radius: 2px;
     padding: 1px 6px;
-    color: var(--cyan);
-  }
-  .table-wrap {
-    background: var(--bg-1);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    overflow: hidden;
+    color: var(--t);
   }
 
   /* ── FOOTER ── */
   footer {
     border-top: 1px solid var(--border);
-    padding-top: 20px;
+    padding-top: 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
   .footer-ref {
     font-family: var(--mono);
@@ -487,9 +647,9 @@
     color: var(--text-mute);
   }
   .footer-ref a {
-    color: var(--yellow);
+    color: var(--a-mid);
     text-decoration: none;
-    border-bottom: 1px solid var(--yellow-dk);
+    border-bottom: 1px solid var(--a-border);
   }
   .footer-date {
     font-family: var(--mono);
@@ -503,12 +663,15 @@
 
   <!-- HEADER -->
   <header>
-    <span class="header-tag">KMS · Evaluation Harness · Design Summary</span>
-    <h1>측정 루프를 설계한다 —<br><span>Evaluation Harness</span></h1>
+    <span class="header-tag">KMS &middot; Evaluation Harness &middot; Design Summary</span>
+    <h1>측정 루프를 설계한다 — <em>Evaluation Harness</em></h1>
     <div class="header-meta">
-      <b>Date</b> 2026-04-17 &nbsp;·&nbsp;
-      <b>Author</b> 이지선 &nbsp;·&nbsp;
-      <b>Status</b> Draft / 팀 공유용
+      <b>Author</b>&nbsp;이지선
+      <span class="sep">&nbsp;&middot;&nbsp;</span>
+      <b>Date</b>&nbsp;2026-04-17
+      <span class="sep">&nbsp;&middot;&nbsp;</span>
+      <span class="status-chip">Draft</span>
+      <span style="color:var(--text-mute);">팀 공유용</span>
     </div>
   </header>
 
@@ -533,178 +696,227 @@
       <span class="sec-line"></span>
     </div>
 
-    <div class="arch-wrap">
+    <div class="arch-outer">
 
-      <!-- L3 -->
-      <div class="layer layer-l3">
-        <div class="layer-label">
-          <span class="lnum">L3</span>
-          Continuous Evaluation
-          <span style="color:var(--text-mute);font-size:11px;font-weight:400;margin-left:4px;">— 언제 평가하는가</span>
-        </div>
-        <div class="trigger-row">
-          <span class="trigger-chip active">Local (dev)</span>
-          <span class="trigger-chip active">CI (PR gate)</span>
-          <span class="trigger-chip active">Nightly (full suite)</span>
-          <span class="trigger-chip active">Shadow (prod traffic)</span>
-        </div>
-      </div>
+      <!-- 메인 플로우 -->
+      <div class="arch-flow">
 
-      <div style="text-align:center;padding:3px 0;color:var(--text-mute);font-size:13px;">&#8595;</div>
-
-      <!-- L2 -->
-      <div class="layer layer-l2">
-        <div class="layer-label">
-          <span class="lnum">L2</span>
-          Evaluation Harness
-          <span style="color:var(--text-mute);font-size:11px;font-weight:400;margin-left:4px;">— 무엇을 측정하는가</span>
-        </div>
-        <div class="l2-inner">
-          <div class="l2-box">
-            <div class="l2-box-title">Evaluator</div>
-            <div class="l2-box-desc">평가 단위. ArtifactLoader + GoldenLoader로 데이터를 로드하고 결과를 Metric에 위임</div>
+        <!-- L3 -->
+        <div class="layer-block lb-l3">
+          <div class="lb-label">
+            <span>L3</span>
+            <span class="lname">Continuous Evaluation</span>
+            <span class="lsub">— 언제 평가하는가</span>
           </div>
-          <div class="l2-box">
-            <div class="l2-box-title">Metric</div>
-            <div class="l2-box-desc">개별 측정 함수. plugin 방식으로 Registry에 등록. <code>@register_metric</code></div>
-          </div>
-          <div class="l2-box">
-            <div class="l2-box-title">Group + Comparator</div>
-            <div class="l2-box-desc">여러 Evaluator 집계. 이전 run 대비 회귀/개선을 판정. OTel Metrics로 방출</div>
+          <div class="l3-chips">
+            <span class="l3-chip">Local (dev)</span>
+            <span class="l3-chip">CI (PR gate)</span>
+            <span class="l3-chip">Nightly (full suite)</span>
+            <span class="l3-chip">Shadow (prod traffic)</span>
           </div>
         </div>
-      </div>
 
-      <!-- 횡단 인프라 L1+L2 -->
-      <div style="padding:6px 0 2px;">
-        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;">L1 + L2 횡단 인프라</div>
-        <div class="infra-band">
-          <span class="infra-chip otel"><span class="dot"></span>OTel — Traces (L1) + Metrics (L2)</span>
-          <span class="infra-chip storage"><span class="dot"></span>Shared Storage — S3 / DB (artifact + golden)</span>
+        <div class="flow-connector" style="height:36px;">
+          <div class="conn-line" style="flex:1;"></div>
+          <div class="conn-arrow">&#8595;</div>
+          <div class="conn-line" style="flex:1;"></div>
         </div>
-      </div>
 
-      <div style="text-align:center;padding:3px 0;color:var(--text-mute);font-size:13px;">&#8595;</div>
+        <!-- L2 -->
+        <div class="layer-block lb-l2">
+          <div class="lb-label">
+            <span>L2</span>
+            <span class="lname">Evaluation Harness</span>
+            <span class="lsub">— 평가 워커, 별도 프로세스</span>
+          </div>
 
-      <!-- L1 -->
-      <div class="layer layer-l1">
-        <div class="layer-label">
-          <span class="lnum">L1</span>
-          Pipeline
-          <span style="color:var(--text-mute);font-size:11px;font-weight:400;margin-left:4px;">— 비즈니스 로직</span>
-        </div>
-        <div class="l1-inner">
-          <div class="l1-box">
-            <div class="l1-box-title">Component Base Class</div>
-            <div class="l1-box-desc">모든 컴포넌트의 루트. OTel 계측·에러처리 내장. 서브클래스는 <code>_run()</code>만 구현</div>
+          <div class="l2-pipeline">
+            <div class="l2-node">
+              <div class="l2-node-name">ArtifactLoader</div>
+              <div class="l2-node-sub">S3/DB에서<br>아티팩트 로드</div>
+            </div>
+            <div class="l2-arrow">+</div>
+            <div class="l2-node">
+              <div class="l2-node-name">GoldenLoader</div>
+              <div class="l2-node-sub">정답 데이터<br>로드</div>
+            </div>
+            <div class="l2-arrow">&#8594;</div>
+            <div class="l2-node">
+              <div class="l2-node-name">Evaluator</div>
+              <div class="l2-node-sub">평가 단위<br>실행</div>
+            </div>
+            <div class="l2-arrow">&#8594;</div>
+            <div class="l2-node">
+              <div class="l2-node-name">Group</div>
+              <div class="l2-node-sub">Evaluator<br>집계</div>
+            </div>
+            <div class="l2-arrow">&#8594;</div>
+            <div class="l2-node">
+              <div class="l2-node-name">Comparator</div>
+              <div class="l2-node-sub">회귀/개선<br>판정</div>
+            </div>
           </div>
-          <div class="l1-box">
-            <div class="l1-box-title">LLMComponent</div>
-            <div class="l1-box-desc">LLM 호출 전용 서브클래스. <code>gen_ai.*</code> 속성 자동 기록</div>
-          </div>
-          <div class="l1-box">
-            <div class="l1-box-title">Pipeline Workers</div>
-            <div class="l1-box-desc">Celery 기반 비동기 실행. 완료 후 평가 워커를 트리거</div>
-          </div>
-        </div>
-      </div>
 
-      <!-- L1 전용 인프라 -->
-      <div style="padding:6px 0 0;">
-        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;">L1 전용 인프라</div>
-        <div class="infra-band">
-          <span class="infra-chip celery"><span class="dot"></span>Celery Workers</span>
-          <span class="infra-chip celery"><span class="dot"></span>Trace Context (propagation)</span>
-        </div>
-      </div>
-
-      <!-- 데이터 흐름 -->
-      <div class="flow-box">
-        <div class="flow-box-title">데이터 흐름 — L1 → L2</div>
-        <div class="flow-steps">
-          <div class="flow-step">
-            <span class="flow-step-badge badge-l1">L1</span>
-            <span class="flow-step-text">Component <em>__call__</em> 실행 — 두 경로로 분기:</span>
-          </div>
-          <div class="path-row">
-            <span class="path-num">①</span>
-            <span class="flow-step-text" style="font-size:12px;"><em>artifact + 실행 메타</em> → S3/DB — 평가 워커가 읽는 <em>유일한 소스</em></span>
-          </div>
-          <div class="path-row">
-            <span class="path-num">②</span>
-            <span class="flow-step-text" style="font-size:12px;"><em>OTel Traces</em> → OTLP → 대시보드 — 시각화 전용, 꺼내오지 않음</span>
-          </div>
-          <hr class="flow-divider">
-          <div class="flow-step">
-            <span class="flow-step-badge badge-l2">L2</span>
-            <span class="flow-step-text">파이프라인 워커 완료 후 <em>비동기</em>로 평가 워커 트리거</span>
-          </div>
-          <div class="flow-step">
-            <span class="flow-step-badge badge-l2">L2</span>
-            <span class="flow-step-text">ArtifactLoader + GoldenLoader → Evaluator → Group → Comparator → <em>OTel Metrics 방출</em></span>
-          </div>
-          <div class="flow-step">
-            <span class="flow-step-badge badge-otel">OTel</span>
-            <span class="flow-step-text">Langfuse / MLflow / Grafana 등 어떤 백엔드든 교체 가능 — <em>벤더 종속 없음</em></span>
+          <div class="l2-emit">
+            <span class="l2-emit-label">OTel Metrics</span>
+            <span class="l2-emit-arrow">&#8594;</span>
+            <span>OTLP 방출</span>
+            <span class="l2-emit-arrow">&#8594;</span>
+            <span>백엔드 (Langfuse / Grafana / 자체 대시보드…)</span>
           </div>
         </div>
-      </div>
 
-    </div>
+        <div class="async-connector">
+          <div class="async-line"></div>
+          <div class="async-badge">비동기 트리거 &nbsp;─ ─ ─</div>
+          <div class="async-line"></div>
+        </div>
+
+        <!-- L1 -->
+        <div class="layer-block lb-l1">
+          <div class="lb-label">
+            <span>L1</span>
+            <span class="lname">Pipeline</span>
+            <span class="lsub">— 파이프라인 워커</span>
+          </div>
+
+          <!-- Stages -->
+          <div class="pipeline-stages">
+            <div class="stage-box">
+              <div class="stage-name">Stage 1 · Ingest</div>
+              <div class="stage-comps">Crawler, Fetcher, Validator</div>
+            </div>
+            <div class="stage-arrow">&#8594;</div>
+            <div class="stage-box">
+              <div class="stage-name">Stage 2 · Parse</div>
+              <div class="stage-comps">Docling / Marker, Cleaner</div>
+            </div>
+            <div class="stage-arrow">&#8594;</div>
+            <div class="stage-box">
+              <div class="stage-name">Stage 3 · Index</div>
+              <div class="stage-comps">Embedder, VectorStore</div>
+            </div>
+          </div>
+
+          <!-- __call__ 분기 -->
+          <div class="call-section">
+            <div class="call-trigger">Component __call__ 실행 시 — 두 경로로 동시 분기</div>
+            <div class="fork-row">
+              <div class="fork-path fork-path-1">
+                <span class="fork-num">① S3 / DB</span>
+                <span class="fork-dest">artifact + 실행 메타 저장</span>
+                <span class="fork-note">평가 워커가 읽는 유일한 소스</span>
+              </div>
+              <div class="fork-path fork-path-2">
+                <span class="fork-num">② OTel Traces</span>
+                <span class="fork-dest">OTLP → 대시보드</span>
+                <span class="fork-note">시각화 전용, 꺼내오지 않음</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /arch-flow -->
+
+      <!-- 횡단 인프라 사이드바 -->
+      <div class="infra-sidebar">
+
+        <div class="infra-panel">
+          <div class="infra-panel-header">L1 + L2 횡단 인프라</div>
+          <div class="infra-items">
+            <div class="infra-item">
+              <div class="infra-dot dot-otel"></div>
+              <div>
+                <div style="font-weight:600;color:var(--text);font-size:11.5px;">OTel</div>
+                <div style="font-size:11px;color:var(--text-mute);">Traces (L1) + Metrics (L2)</div>
+              </div>
+            </div>
+            <div class="infra-item">
+              <div class="infra-dot dot-stor"></div>
+              <div>
+                <div style="font-weight:600;color:var(--text);font-size:11.5px;">Shared Storage</div>
+                <div style="font-size:11px;color:var(--text-mute);">S3 / DB<br>artifact + golden</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="infra-panel">
+          <div class="infra-panel-header">L1 전용 인프라</div>
+          <div class="infra-items">
+            <div class="infra-item">
+              <div class="infra-dot dot-green"></div>
+              <div>
+                <div style="font-weight:600;color:var(--text);font-size:11.5px;">Celery Workers</div>
+                <div style="font-size:11px;color:var(--text-mute);">비동기 파이프라인 실행</div>
+              </div>
+            </div>
+            <div class="infra-item">
+              <div class="infra-dot dot-green"></div>
+              <div>
+                <div style="font-weight:600;color:var(--text);font-size:11.5px;">Trace Context</div>
+                <div style="font-size:11px;color:var(--text-mute);">컨텍스트 전파 (propagation)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--bg-1);border:1px solid var(--border);border-radius:6px;padding:12px 14px;">
+          <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-mute);margin-bottom:8px;">읽는 방향</div>
+          <div style="font-size:11px;color:var(--text-dim);line-height:1.6;">
+            L3 트리거 → L2 평가 워커 → (비동기) L1 파이프라인 완료 후 실행.<br><br>
+            다이어그램은 <strong style="color:var(--text);">위 = 전략 레이어</strong>, <strong style="color:var(--text);">아래 = 실행 레이어</strong> 순서로 배치.
+          </div>
+        </div>
+
+      </div><!-- /infra-sidebar -->
+
+    </div><!-- /arch-outer -->
   </section>
 
-  <!-- 섹션 3: 핵심 개념 -->
+  <!-- 섹션 3: 왜 빠른 루프인가 -->
   <section>
     <div class="sec-label">
       <span class="sec-num">03</span>
-      <span class="sec-title">핵심 개념</span>
+      <span class="sec-title">왜 빠른 루프인가</span>
       <span class="sec-line"></span>
     </div>
     <div class="cards">
 
-      <div class="card">
+      <div class="card card-accent-g">
         <div class="card-head">
-          <div class="card-icon yellow">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#c07d10" stroke-width="1.5"/><path d="M5 8h6M8 5v6" stroke="#c07d10" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <div class="card-name">Component Base Class</div>
+          <span class="card-tag card-tag-g">컴포넌트 격리</span>
+          <div class="card-title">컴포넌트를 바꿔도<br>평가는 안 깨진다</div>
         </div>
-        <ul class="card-items">
-          <li>모든 파이프라인 컴포넌트가 상속</li>
-          <li><code>__call__</code>이 OTel 계측 + 에러처리를 은닉</li>
-          <li>서브클래스는 <code>_run()</code>만 구현 — <strong>OTel 코드 0줄</strong></li>
-          <li>LLM 호출 컴포넌트는 <code>LLMComponent</code> 상속, <code>gen_ai.*</code> 자동 기록</li>
-        </ul>
+        <div class="card-body">
+          <div class="card-item">Parser를 Docling에서 Marker로 교체해도 평가 코드 <strong>무수정</strong></div>
+          <div class="card-item">평가 코어(Metric, Group, Registry)는 컴포넌트 변경과 완전 격리</div>
+          <div class="card-item">빠르게 교체 실험 → <strong>즉시 결과 비교</strong> 가능</div>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card card-accent-a">
         <div class="card-head">
-          <div class="card-icon cyan">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 13V7l5-4 5 4v6H3z" stroke="#0e7c86" stroke-width="1.5" stroke-linejoin="round"/><rect x="6" y="9" width="4" height="4" rx="0.5" stroke="#0e7c86" stroke-width="1.2"/></svg>
-          </div>
-          <div class="card-name">Evaluator / Metric / Group</div>
+          <span class="card-tag card-tag-a">확장성</span>
+          <div class="card-title">평가 항목을 YAML 한 장으로 추가한다</div>
         </div>
-        <ul class="card-items">
-          <li>EleutherAI lm-evaluation-harness 패턴 차용</li>
-          <li>평가 정의 = <strong>YAML(데이터) + Metric(plugin) + Group(집계)</strong></li>
-          <li><code>@register_evaluator</code>, <code>@register_metric</code>으로 동적 등록</li>
-          <li>새 메트릭 추가 = <code>metrics/</code> 파일 + YAML 한 줄 — <strong>코어 무수정</strong></li>
-        </ul>
+        <div class="card-body">
+          <div class="card-item">새 메트릭이 필요하면 파일 하나 + YAML 한 줄</div>
+          <div class="card-item">코어 코드를 <strong>건드리지 않음</strong></div>
+          <div class="card-item">평가 기준을 빠르게 확장 가능</div>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card card-accent-t">
         <div class="card-head">
-          <div class="card-icon green">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#1a7a35" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="#1a7a35" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <div class="card-name">OTel (OpenTelemetry)</div>
+          <span class="card-tag card-tag-t">벤더 독립</span>
+          <div class="card-title">대시보드를 자유롭게 바꿀 수 있다</div>
         </div>
-        <ul class="card-items">
-          <li>평가의 인프라 계층 — <strong>관측 도구가 아닌 관측의 공용 규격</strong></li>
-          <li>L1은 <em>Traces</em>를, L2는 <em>Metrics</em>를 OTLP로 방출</li>
-          <li>방출 전용 — 백엔드에서 꺼내오지 않음 → 벤더 종속 없음</li>
-          <li>Langfuse, MLflow, Grafana 등 어떤 대시보드든 교체 가능</li>
-        </ul>
+        <div class="card-body">
+          <div class="card-item">지금은 CLI + 파일 결과, 나중엔 Langfuse, 그 다음엔 자체 대시보드</div>
+          <div class="card-item">OTel(OTLP)로 방출하므로 <strong>수신 도구에 종속 없음</strong></div>
+          <div class="card-item">도구가 바뀌어도 파이프라인/평가 코드 무수정</div>
+        </div>
       </div>
 
     </div>
@@ -728,15 +940,15 @@
         <tbody>
           <tr>
             <td>파이프라인 컴포넌트 추가/교체</td>
-            <td>Component 상속, <code>_run()</code>만 구현. OTel은 Base Class가 자동 처리</td>
+            <td>Component 상속, <code>_run()</code>만 구현. OTel은 자동</td>
           </tr>
           <tr>
             <td>평가 항목 추가</td>
-            <td><code>evaluators/</code>에 클래스 + <code>configs/evaluators/</code>에 YAML 한 장</td>
+            <td><code>evaluators/</code> 클래스 + <code>configs/</code> YAML 한 장</td>
           </tr>
           <tr>
             <td>새 메트릭 추가</td>
-            <td><code>metrics/</code>에 파일 + YAML <code>metric_list</code>에 한 줄 추가</td>
+            <td><code>metrics/</code> 파일 + YAML에 한 줄</td>
           </tr>
           <tr>
             <td>평가 실행</td>
@@ -744,7 +956,7 @@
           </tr>
           <tr>
             <td>결과 확인</td>
-            <td><code>runs/{run_id}/results.json</code> → git으로 이력 관리</td>
+            <td><code>runs/{run_id}/results.json</code>, git으로 이력 관리</td>
           </tr>
         </tbody>
       </table>
@@ -756,7 +968,7 @@
     <div class="footer-ref">
       상세 설계서: <a href="260417_kms-evaluation-harness-design.md">260417_kms-evaluation-harness-design.md</a>
     </div>
-    <div class="footer-date">2026-04-17 · 이지선</div>
+    <div class="footer-date">2026-04-17 &nbsp;&middot;&nbsp; 이지선</div>
   </footer>
 
 </div>
