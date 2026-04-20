@@ -26,7 +26,7 @@
 
 **R5. 장기 확장: 관측·감사 기반** — 단기적으로는 개발 도구, 장기적으로는 운영 관측 및 감사 대시보드의 기반이 된다.
 
-**R6. 회귀 판정과 재현성** — 결정적 메트릭(ChrF++, Entity F1 등)은 단일 실행으로 회귀를 차단한다. 비결정적 메트릭(LLM-as-Judge 등)은 N회 반복 + 통계적 판정으로 추세를 감시한다. Comparator 컴포넌트가 이를 담당한다.
+**R6. 재현성** — 결정적 메트릭(ChrF++, Entity F1 등)은 동일 조건에서 동일 결과를 보장한다. 비결정적 메트릭(LLM 기반)은 N회 반복 + 통계적 판정으로 신뢰도를 확보한다. 회귀 판정(Comparator)은 추후 과제.
 
 ---
 
@@ -153,11 +153,12 @@
              Group 집계 (YAML)
                      │
                      ▼
-             Comparator (회귀 판정)
-                     │
-                     ▼
-             OTel Metrics 방출  ──→ OTLP ──→ 백엔드
-             (평가 결과도 벤더 중립)
+        ┌────────────┴────────────┐
+        │ 독립 모드                │ 백엔드 모드
+        ▼                         ▼
+ FileResultStore              OTLP 방출
+ CLI 출력                     → 백엔드가 저장/비교/시각화
+ (MVP)                        (Langfuse, MLflow 등)
 
 ═══════════════════════════════════════════════════════════════════
  L3  Continuous Evaluation
@@ -373,8 +374,8 @@ kms/eval/
     artifact_loader.py      ArtifactLoader 추상 + S3/Local 구현 (실행 메타 포함)
     golden_loader.py        GoldenLoader (golden/ 디렉토리에서 읽기)
 
-  comparator/
-    comparator.py           Comparator 추상 + 회귀 판정 로직
+  result_store/
+    file_result_store.py    FileResultStore (독립 모드, MVP)
 
   preprocess/
     artifact_normalize_ws.py   artifact 정규화 (BOM, whitespace)
@@ -411,7 +412,10 @@ kms/eval/
      │
      ▼
 ⑤ AGGREGATION   파일별 점수 → evaluator 집계 → group 집계
-                → OTel Metrics로 방출 (OTLP → 어디든)
+
+⑥ RESULT         결과 처리 (모드에 따라 분기)
+                  독립 모드: FileResultStore + CLI
+                  백엔드 모드: OTLP 방출 → 백엔드가 저장/비교/시각화
 ```
 
 ## 5.3 YAML 평가 정의
@@ -789,19 +793,18 @@ CeleryInstrumentor().instrument()
 
 ---
 
-### R6. 회귀 판정과 재현성
+### R6. 재현성
 
-> 결정적 메트릭은 단일 실행으로 회귀 차단, 비결정적 메트릭은 N회 반복 + 통계적 판정으로 추세 감시.
+> 결정적 메트릭은 동일 조건에서 동일 결과를 보장한다. 비결정적 메트릭은 N회 반복 + 통계적 판정으로 신뢰도를 확보한다.
 
 **가능한 이유**: 메트릭의 결정성에 따라 **두 트랙으로 분리** 운영하기 때문이다. LLM 비결정성(temperature, 배치 크기, 부동소수점 정밀도)은 temperature=0으로도 완전히 제거할 수 없으므로, 비결정적 메트릭에는 통계적 접근이 필수다.
 
-| 설계 결정 | 왜 이것이 회귀 판정을 가능하게 하는가 |
+| 설계 결정 | 왜 이것이 재현성을 보장하는가 |
 |---|---|
-| **두 트랙 분리** | 결정적 메트릭(ChrF++, Entity F1, 구조 검증)으로 CI hard gate를 만들고, 비결정적 메트릭(LLM-as-Judge)은 추세 모니터링에 활용. 성격이 다른 메트릭을 같은 기준으로 판정하지 않는다. |
-| **Comparator 컴포넌트** (5장) | Evaluator가 절대 점수를 내고, Comparator가 이전 run과 비교하여 회귀 여부를 판정. 판정 로직과 점수 계산 로직을 분리한다. |
+| **두 트랙 분리** | 결정적 메트릭(ChrF++, Entity F1, 구조 검증)은 단일 실행으로 신뢰 가능. 비결정적 메트릭(LLM 기반)은 N회 반복 + 통계적 판정. 성격이 다른 메트릭을 같은 기준으로 다루지 않는다. |
 | **재현성 메타데이터** (7장) | 프롬프트 해시, 모델 정확 버전, temperature, seed를 span에 필수 기록. "왜 이 점수가 나왔는가"를 사후 추적할 수 있다. |
 
-**검증 시나리오**: 동일 코드·동일 golden에 대해 Local 모드로 5회 실행 시, 결정적 메트릭의 결과값이 동일해야 한다. 비결정적 메트릭은 95% 신뢰구간이 이전 baseline과 겹치면 regression이 아닌 것으로 판정한다.
+**검증 시나리오**: 동일 코드·동일 golden에 대해 Local 모드로 5회 실행 시, 결정적 메트릭의 결과값이 동일해야 한다.
 
 ---
 
