@@ -8,23 +8,23 @@
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
 
   :root {
-    --bg:        #0d0f12;
-    --bg-1:      #141720;
-    --bg-2:      #1c2030;
-    --bg-3:      #242840;
-    --border:    #2a2f45;
-    --border-hi: #3a4060;
-    --text:      #d8dce8;
-    --text-dim:  #7a8098;
-    --text-mute: #4a5070;
-    --yellow:    #f9c846;
-    --yellow-dk: #c49a1e;
-    --yellow-bg: rgba(249,200,70,0.08);
-    --cyan:      #4dd8e0;
-    --cyan-bg:   rgba(77,216,224,0.07);
-    --green:     #5ec97a;
-    --green-bg:  rgba(94,201,122,0.07);
-    --red:       #e05c6a;
+    --bg:        #ffffff;
+    --bg-1:      #f7f8fa;
+    --bg-2:      #f0f2f5;
+    --bg-3:      #e8eaef;
+    --border:    #d8dbe3;
+    --border-hi: #c0c4d0;
+    --text:      #1a1d26;
+    --text-dim:  #4a5068;
+    --text-mute: #8890a5;
+    --yellow:    #c07d10;
+    --yellow-dk: #9a6400;
+    --yellow-bg: rgba(192,125,16,0.08);
+    --cyan:      #0e7c86;
+    --cyan-bg:   rgba(14,124,134,0.06);
+    --green:     #1a7a35;
+    --green-bg:  rgba(26,122,53,0.06);
+    --red:       #c03040;
     --mono: 'IBM Plex Mono', 'Consolas', monospace;
     --sans: 'Noto Sans KR', -apple-system, 'Malgun Gothic', sans-serif;
   }
@@ -47,7 +47,6 @@
     border-bottom: 1px solid var(--border);
     padding-bottom: 24px;
     margin-bottom: 48px;
-    position: relative;
   }
   .header-tag {
     font-family: var(--mono);
@@ -64,7 +63,7 @@
     font-weight: 700;
     letter-spacing: -0.5px;
     line-height: 1.25;
-    color: #eef0f8;
+    color: var(--text);
     margin-bottom: 10px;
   }
   h1 span {
@@ -100,7 +99,7 @@
   .sec-title {
     font-size: 16px;
     font-weight: 600;
-    color: #eef0f8;
+    color: var(--text);
     letter-spacing: -0.2px;
   }
   .sec-line {
@@ -133,10 +132,8 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 28px 24px 32px;
-    position: relative;
   }
 
-  /* 계층 레이블 공통 */
   .layer {
     position: relative;
     border-radius: 4px;
@@ -161,17 +158,12 @@
 
   /* L3 */
   .layer-l3 {
-    background: var(--bg-2);
+    background: var(--bg);
     border: 1px solid var(--border);
-    border-top: 2px solid var(--cyan);
+    border-top: 3px solid var(--cyan);
     margin-bottom: 6px;
   }
   .layer-l3 .layer-label { color: var(--cyan); }
-  .layer-l3-title {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-bottom: 12px;
-  }
 
   .trigger-row {
     display: flex;
@@ -183,21 +175,21 @@
     font-size: 11px;
     padding: 4px 11px;
     border-radius: 3px;
-    background: var(--bg-3);
-    border: 1px solid var(--border-hi);
-    color: var(--text);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
   }
   .trigger-chip.active {
-    background: rgba(77,216,224,0.12);
+    background: var(--cyan-bg);
     border-color: var(--cyan);
     color: var(--cyan);
   }
 
   /* L2 */
   .layer-l2 {
-    background: var(--bg-2);
+    background: var(--bg);
     border: 1px solid var(--border);
-    border-top: 2px solid var(--yellow);
+    border-top: 3px solid var(--yellow);
     margin-bottom: 6px;
   }
   .layer-l2 .layer-label { color: var(--yellow); }
@@ -208,8 +200,8 @@
     gap: 10px;
   }
   .l2-box {
-    background: var(--bg-3);
-    border: 1px solid var(--border-hi);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 12px 14px;
   }
@@ -225,36 +217,12 @@
     color: var(--text-dim);
     line-height: 1.55;
   }
-  .flow-arrow-v {
-    text-align: center;
-    padding: 4px 0;
-    color: var(--text-mute);
-    font-size: 18px;
-    line-height: 1;
-    position: relative;
-  }
-  .flow-arrow-v::before {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 10px;
-    background: var(--border-hi);
-    margin: 0 auto 2px;
-  }
-  .flow-arrow-v::after {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 10px;
-    background: var(--border-hi);
-    margin: 2px auto 0;
-  }
 
   /* L1 */
   .layer-l1 {
-    background: var(--bg-2);
+    background: var(--bg);
     border: 1px solid var(--border);
-    border-top: 2px solid var(--green);
+    border-top: 3px solid var(--green);
     margin-bottom: 6px;
   }
   .layer-l1 .layer-label { color: var(--green); }
@@ -266,8 +234,8 @@
     align-items: center;
   }
   .l1-box {
-    background: var(--bg-3);
-    border: 1px solid var(--border-hi);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 10px 14px;
     flex: 1;
@@ -308,7 +276,6 @@
   .infra-chip .dot {
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--text-mute);
     flex-shrink: 0;
   }
   .infra-chip.otel .dot { background: var(--cyan); }
@@ -353,9 +320,9 @@
     flex-shrink: 0;
     margin-top: 2px;
   }
-  .badge-l1 { background: var(--green-bg); color: var(--green); border: 1px solid rgba(94,201,122,0.3); }
-  .badge-l2 { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(249,200,70,0.3); }
-  .badge-otel { background: var(--cyan-bg); color: var(--cyan); border: 1px solid rgba(77,216,224,0.3); }
+  .badge-l1 { background: var(--green-bg); color: var(--green); border: 1px solid rgba(26,122,53,0.3); }
+  .badge-l2 { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(192,125,16,0.3); }
+  .badge-otel { background: var(--cyan-bg); color: var(--cyan); border: 1px solid rgba(14,124,134,0.3); }
   .flow-step-text { color: var(--text-dim); line-height: 1.5; }
   .flow-step-text em {
     font-style: normal;
@@ -447,8 +414,8 @@
   .card-items li code {
     font-family: var(--mono);
     font-size: 11px;
-    background: var(--bg-3);
-    border: 1px solid var(--border-hi);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     border-radius: 2px;
     padding: 0 5px;
     color: var(--text);
@@ -471,7 +438,7 @@
     color: var(--text-mute);
     padding: 10px 16px;
     border-bottom: 1px solid var(--border-hi);
-    background: var(--bg-1);
+    background: var(--bg-2);
   }
   .dev-table td {
     padding: 12px 16px;
@@ -491,16 +458,11 @@
   .dev-table td code {
     font-family: var(--mono);
     font-size: 11.5px;
-    background: var(--bg-3);
-    border: 1px solid var(--border-hi);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     border-radius: 2px;
     padding: 1px 6px;
     color: var(--cyan);
-  }
-  .dev-table td em {
-    font-style: normal;
-    color: var(--text);
-    font-weight: 500;
   }
   .table-wrap {
     background: var(--bg-1);
@@ -545,7 +507,7 @@
     <h1>측정 루프를 설계한다 —<br><span>Evaluation Harness</span></h1>
     <div class="header-meta">
       <b>Date</b> 2026-04-17 &nbsp;·&nbsp;
-      <b>Author</b> KMS Team &nbsp;·&nbsp;
+      <b>Author</b> 이지선 &nbsp;·&nbsp;
       <b>Status</b> Draft / 팀 공유용
     </div>
   </header>
@@ -588,7 +550,6 @@
         </div>
       </div>
 
-      <!-- 화살표 L3→L2 -->
       <div style="text-align:center;padding:3px 0;color:var(--text-mute);font-size:13px;">&#8595;</div>
 
       <!-- L2 -->
@@ -601,11 +562,11 @@
         <div class="l2-inner">
           <div class="l2-box">
             <div class="l2-box-title">Evaluator</div>
-            <div class="l2-box-desc">평가 단위. ArtifactLoader + GoldenLoader로 데이터를 로드하고 실행 결과를 Metric에 위임</div>
+            <div class="l2-box-desc">평가 단위. ArtifactLoader + GoldenLoader로 데이터를 로드하고 결과를 Metric에 위임</div>
           </div>
           <div class="l2-box">
             <div class="l2-box-title">Metric</div>
-            <div class="l2-box-desc">개별 측정 함수. plugin 방식으로 Registry에 등록. <code style="font-family:var(--mono);font-size:10px;background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:0 4px;color:var(--text);">@register_metric</code></div>
+            <div class="l2-box-desc">개별 측정 함수. plugin 방식으로 Registry에 등록. <code>@register_metric</code></div>
           </div>
           <div class="l2-box">
             <div class="l2-box-title">Group + Comparator</div>
@@ -623,7 +584,6 @@
         </div>
       </div>
 
-      <!-- 화살표 L2→L1 -->
       <div style="text-align:center;padding:3px 0;color:var(--text-mute);font-size:13px;">&#8595;</div>
 
       <!-- L1 -->
@@ -636,11 +596,11 @@
         <div class="l1-inner">
           <div class="l1-box">
             <div class="l1-box-title">Component Base Class</div>
-            <div class="l1-box-desc">모든 컴포넌트의 루트. OTel 계측·에러처리 내장. 서브클래스는 <code style="font-family:var(--mono);font-size:10px;background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:0 4px;color:var(--text);">_run()</code>만 구현</div>
+            <div class="l1-box-desc">모든 컴포넌트의 루트. OTel 계측·에러처리 내장. 서브클래스는 <code>_run()</code>만 구현</div>
           </div>
           <div class="l1-box">
             <div class="l1-box-title">LLMComponent</div>
-            <div class="l1-box-desc">LLM 호출 전용 서브클래스. <code style="font-family:var(--mono);font-size:10px;background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:0 4px;color:var(--text);">gen_ai.*</code> 속성 자동 기록</div>
+            <div class="l1-box-desc">LLM 호출 전용 서브클래스. <code>gen_ai.*</code> 속성 자동 기록</div>
           </div>
           <div class="l1-box">
             <div class="l1-box-title">Pipeline Workers</div>
@@ -702,11 +662,10 @@
     </div>
     <div class="cards">
 
-      <!-- 카드 1 -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon yellow">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#f9c846" stroke-width="1.5"/><path d="M5 8h6M8 5v6" stroke="#f9c846" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#c07d10" stroke-width="1.5"/><path d="M5 8h6M8 5v6" stroke="#c07d10" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <div class="card-name">Component Base Class</div>
         </div>
@@ -718,11 +677,10 @@
         </ul>
       </div>
 
-      <!-- 카드 2 -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon cyan">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 13V7l5-4 5 4v6H3z" stroke="#4dd8e0" stroke-width="1.5" stroke-linejoin="round"/><rect x="6" y="9" width="4" height="4" rx="0.5" stroke="#4dd8e0" stroke-width="1.2"/></svg>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 13V7l5-4 5 4v6H3z" stroke="#0e7c86" stroke-width="1.5" stroke-linejoin="round"/><rect x="6" y="9" width="4" height="4" rx="0.5" stroke="#0e7c86" stroke-width="1.2"/></svg>
           </div>
           <div class="card-name">Evaluator / Metric / Group</div>
         </div>
@@ -734,11 +692,10 @@
         </ul>
       </div>
 
-      <!-- 카드 3 -->
       <div class="card">
         <div class="card-head">
           <div class="card-icon green">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#5ec97a" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="#5ec97a" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#1a7a35" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="#1a7a35" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <div class="card-name">OTel (OpenTelemetry)</div>
         </div>
@@ -799,7 +756,7 @@
     <div class="footer-ref">
       상세 설계서: <a href="260417_kms-evaluation-harness-design.md">260417_kms-evaluation-harness-design.md</a>
     </div>
-    <div class="footer-date">2026-04-17</div>
+    <div class="footer-date">2026-04-17 · 이지선</div>
   </footer>
 
 </div>
