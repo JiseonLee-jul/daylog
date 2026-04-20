@@ -111,10 +111,10 @@
  │  Artifact + 실행 메타 저장  │    │  OTel Traces 방출         │
  │  (파이프라인 기존 저장소)    │    │  (Base Class가 자동 계측)  │
  │                          │    │                          │
- │  S3/NFS:   body.md       │    │  OTLP ──→ 백엔드          │
- │  Postgres: chunks        │    │  (Langfuse, Grafana 등)   │
- │  GraphDB:  nodes, edges  │    │  시각화/모니터링 용도       │
- │  + 소요시간, 토큰 수 등     │    │                          │
+ │  S3/NFS:   body.md       │    │   독립 모드: Console/File │
+ │  Postgres: chunks        │    │   백엔드 모드: OTLP →      │
+ │  GraphDB:  nodes, edges  │    │                 백엔드     │
+ │  + 소요시간, 토큰 수 등     │    │   (Langfuse, Grafana 등) │
  └────────────┬─────────────┘    └──────────────────────────┘
               │
               │
@@ -376,6 +376,9 @@ kms/eval/
 
   result_store/
     file_result_store.py    FileResultStore (독립 모드, MVP)
+                            runs/{run_id}/meta.json  (config, pipeline_version)
+                            runs/{run_id}/scores.jsonl (시계열 평가 점수)
+                            ※ 메타/시계열 분리 → 추후 DB 이전 시 그대로 매핑
 
   preprocess/
     artifact_normalize_ws.py   artifact 정규화 (BOM, whitespace)
@@ -414,7 +417,7 @@ kms/eval/
 ⑤ AGGREGATION   파일별 점수 → evaluator 집계 → group 집계
 
 ⑥ RESULT         결과 처리 (모드에 따라 분기)
-                  독립 모드: FileResultStore + CLI
+                  독립 모드: FileResultStore (meta/시계열 분리 저장) + CLI
                   백엔드 모드: OTLP 방출 → 백엔드가 저장/비교/시각화
 ```
 
@@ -819,14 +822,17 @@ CeleryInstrumentor().instrument()
 **평가 체계 상세화**
 - YAML 필드 명세 상세 설계 (applicable_depths, weight_by_size 정의 등)
 - GraphEval 구체화 (입력/golden 형태, entity 매칭 전략)
-- Comparator 상세 정책 (baseline 저장, 임계값, 통계 검정 방식)
+- 회귀 판정 (Comparator: baseline 저장, 임계값, 통계 검정, A/B 비교)
 - 비결정적 메트릭 운영 정책 (반복 횟수, 신뢰구간 기준)
+- ResultStore 백엔드 모드 연동 (Langfuse/MLflow 전환 시 독립 모드 → 백엔드 모드)
+- 평가 워커 큐잉 메커니즘 (Langfuse의 BullMQ / Celery evaluation queue 패턴 참조)
+- 메타/시계열 저장소 분리 (독립 모드 FileResultStore → PostgreSQL + ClickHouse 등으로 점진 이전)
 
 **운영 연동**
 - CI/CD 도구 선정 및 연동 (GitHub Workflow 등)
 - Golden 관리 체계 (작성→리뷰→승인, 메타데이터, 갱신 트리거)
 - 비용 제어 (평가 실행당 budget cap, LLM-judge 샘플링 전략)
-- 통합 인터페이스 (CLI 외 진입점: 대시보드 UI, Claude Code, Slack bot 등 — EvalService API 기반)
+- 통합 인터페이스 (Query API / EvalService REST — 대시보드 UI, Claude Code, Slack bot 등 모든 진입점의 토대)
 - 다인 개발 환경 대응 (평가 이력 격리, Golden 동시 수정 관리, 공유 baseline 정책)
 
 **파이프라인 연동**

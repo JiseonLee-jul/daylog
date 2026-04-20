@@ -474,10 +474,10 @@
  │  Artifact + 실행 메타 저장  │    │  OTel Traces 방출         │
  │  (파이프라인 기존 저장소)    │    │  (Base Class가 자동 계측)  │
  │                          │    │                          │
- │  S3/NFS:   body.md       │    │  OTLP ──→ 백엔드          │
- │  Postgres: chunks        │    │  (Langfuse, Grafana 등)   │
- │  GraphDB:  nodes, edges  │    │  시각화/모니터링 용도       │
- │  + 소요시간, 토큰 수 등     │    │  꺼내오지 않음             │
+ │  S3/NFS:   body.md       │    │   독립 모드: Console/File │
+ │  Postgres: chunks        │    │   백엔드 모드: OTLP →      │
+ │  GraphDB:  nodes, edges  │    │                 백엔드     │
+ │  + 소요시간, 토큰 수 등     │    │   (Langfuse, Grafana 등) │
  └────────────┬─────────────┘    └──────────────────────────┘
               │
       파이프라인 워커 완료
@@ -514,8 +514,12 @@
              Group 집계 (YAML)
                      │
                      ▼
-             OTel Metrics 방출  ──→ OTLP ──→ 백엔드
-             (평가 결과도 벤더 중립)
+        ┌────────────┴────────────┐
+        │ 독립 모드                │ 백엔드 모드
+        ▼                         ▼
+ FileResultStore              OTLP 방출
+ CLI 출력                     → 백엔드가 저장/비교/시각화
+ (MVP)                        (Langfuse, MLflow 등)
 
 ═══════════════════════════════════════════════════════════════
  L3  Continuous Evaluation
@@ -609,11 +613,23 @@
           <div class="card-title">평가 항목을 YAML 한 장으로 추가한다</div>
         </div>
         <div class="card-diagram">
-<pre>YAML: metric: chrf_plus
-       │ 문자열
-Registry: {"chrf_plus": ChrFPlus, …}
-       │ 클래스 바인딩
-ChrFPlus.compute() → 0.91</pre>
+<pre>새 메트릭 추가 — 3단계
+
+[1] 파일 하나 추가
+  metrics/teds.py
+    @register_metric("teds_table")
+    class TEDSMetric: …
+          │
+          ▼ 자동 등록
+  Registry: {…, "teds_table": TEDSMetric}
+
+[2] YAML에 한 줄
+  metric_list:
+    - chrf_plus   (기존)
+    - teds_table  ← 추가
+
+[3] 실행 — 코어 무수정
+  Registry가 이름으로 찾아 실행</pre>
         </div>
         <div class="card-body">
           <div class="card-item">Registry가 <strong>이름으로 클래스를 연결</strong> → YAML에 이름만 쓰면 됨</div>
@@ -659,7 +675,11 @@ L2 Evaluator → OTel Metrics ─┘
         <ul class="future-list">
           <li>YAML 필드 명세 (depth별 평가 분기, 가중치 정의 등)</li>
           <li>그래프 평가 구체화 (golden 형태, entity 매칭 전략)</li>
-          <li>회귀 판정 상세 정책 (baseline 저장, 임계값, 통계 검정)</li>
+          <li>회귀 판정 (Comparator: baseline, 임계값, A/B 비교)</li>
+          <li>ResultStore 백엔드 모드 연동 (독립 → Langfuse/MLflow 전환)</li>
+          <li>평가 워커 큐잉 메커니즘 (BullMQ / Celery evaluation queue)</li>
+          <li>메타/시계열 저장소 분리 (PostgreSQL + ClickHouse 등)</li>
+          <li>Query API / EvalService REST (대시보드·봇 연동 토대)</li>
         </ul>
       </div>
       <div class="future-card">
