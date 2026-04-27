@@ -1,11 +1,20 @@
 [
   {
+    "number": 33,
+    "title": "2026-04-27 (월)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] 제안서 수정\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-04-27T00:33:57Z",
+    "updated_at": "2026-04-27T00:33:57Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/33"
+  },
+  {
     "number": 32,
     "title": "2026-04-20 (월)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ]\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] Evaluation Harness 공유 자료 정리\n- [x] 산림과학청 제안요청서 파악하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-04-20T01:12:00Z",
-    "updated_at": "2026-04-20T01:12:09Z",
+    "updated_at": "2026-04-27T00:30:17Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/32"
   },
   {
