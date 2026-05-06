@@ -1,11 +1,20 @@
 [
   {
+    "number": 35,
+    "title": "2026-05-06 (수)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] GEMS 진행 로드맵 그리기\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-05-06T00:57:49Z",
+    "updated_at": "2026-05-06T00:57:49Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/35"
+  },
+  {
     "number": 34,
     "title": "2026-05-04 (월)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] GEMS 제안요청서 파악하기\n- [ ] GEMS 진행 로드맵 그리기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] GEMS 제안요청서 파악하기\n- [ ] GEMS 진행 로드맵 그리기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-05-04T01:20:29Z",
-    "updated_at": "2026-05-04T01:20:29Z",
+    "updated_at": "2026-05-06T00:57:31Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/34"
   },
   {
