@@ -1,11 +1,20 @@
 [
   {
+    "number": 40,
+    "title": "2026-05-28 (목)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] GEMS 데이터 파이프라인 설계\n  - 요구사항과 기술 구현 방안 1대1 매핑\n  - L2/L4 전처리 방법 조사\n  - 파이프라인 설계 산출물\n  - DBMS 같은 것들 물리설계방안\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-05-28T00:43:20Z",
+    "updated_at": "2026-05-28T00:43:20Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/40"
+  },
+  {
     "number": 39,
     "title": "2026-05-26 (화)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] ETL Pipeline 참고 repo 조사/공부\n- [ ] GEMS 요구사항정의서 v1.0\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [ ] ETL Pipeline 참고 repo 조사/공부\n- [x] GEMS 요구사항정의서 v1.0\n\n\n### Review\n\n**오늘 한 일**\n- GEMS 요구사항정의서 v1.0 만들기\n- Vancouver Websummit AI 동향 보고 자료 작성\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-05-26T06:15:30Z",
-    "updated_at": "2026-05-26T06:15:30Z",
+    "updated_at": "2026-05-28T00:26:34Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/39"
   },
   {
