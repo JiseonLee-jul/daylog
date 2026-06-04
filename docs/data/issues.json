@@ -1,11 +1,20 @@
 [
   {
+    "number": 42,
+    "title": "2026-06-04 (목)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] 위성/기후 분야 레퍼런스 조사\n- [ ] NetCDF 파일을 바탕으로 End-to-End Pipeline 구현하며 기술 스택 연습하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-06-04T01:02:41Z",
+    "updated_at": "2026-06-04T01:02:41Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/42"
+  },
+  {
     "number": 41,
     "title": "2026-05-29 (금)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] Silver 단계 산출물 저장소 (Zarr, Postgres) 비교\n- [ ] DAG 오케스트레이션 Airflow만 또는 + Snakemake\n- [ ] 파이프라인 설계 산출물\n- [ ] 요구사항 정리 및 기술 구현 방안 1대1 매핑\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] Silver 단계 산출물 저장소 (Zarr, Postgres) 비교\n- [x] DAG 오케스트레이션 Airflow만 또는 + Snakemake\n- [x] 지도 시각화 방안 고민\n- [x] 파이프라인 설계 산출물\n- [ ] 요구사항 정리 및 기술 구현 방안 1대1 매핑\n\n\n### Review\n\n**오늘 한 일**\n- Silver 단계 산출물 저장소 형태 (pgStac + Zarr, Postgres + TimescaleDB) 비교 (Agent 소비, 지도 시각화 측면 모두 고려)\n  - 5년 내에 GEMS 위성 하나만 Postgres + TimescaleDB 에 저장하는 것은 가능. Agent 소비 측면에도 더 쉬움.\n  - 다만, 위성 개수 확장, 장기적 관점에서는 pgStac + Zarr가 확장성이 더 좋음. 추후 래스터 시각화에도 활용 가능. 집계 데이터와 저장 방식이 다르다보니 Agent 소비 목적에 따라 조회 방식 라우팅은 필요하다.\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-05-29T00:51:24Z",
-    "updated_at": "2026-05-29T00:51:24Z",
+    "updated_at": "2026-06-01T00:36:46Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/41"
   },
   {
