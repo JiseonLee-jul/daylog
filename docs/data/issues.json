@@ -1,11 +1,20 @@
 [
   {
+    "number": 43,
+    "title": "2026-06-05 (금)",
+    "state": "open",
+    "body": "### Plan\n\n- [ ] GEMS Agent가 분석할 알고리즘 - 구현 방안 매핑\n- [ ] 알고리즘 기반 분석 시나리오 생성\n- [ ] 분석 시나리오 기반 Postgres vs. ARCO 쿼리 비용 비교\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "created_at": "2026-06-05T01:34:54Z",
+    "updated_at": "2026-06-05T01:34:54Z",
+    "html_url": "https://github.com/JiseonLee-jul/daylog/issues/43"
+  },
+  {
     "number": 42,
     "title": "2026-06-04 (목)",
-    "state": "open",
-    "body": "### Plan\n\n- [ ] 위성/기후 분야 레퍼런스 조사\n- [ ] NetCDF 파일을 바탕으로 End-to-End Pipeline 구현하며 기술 스택 연습하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
+    "state": "closed",
+    "body": "### Plan\n\n- [x] 위성/기후 분야 레퍼런스 조사\n- [ ] NetCDF 파일을 바탕으로 End-to-End Pipeline 구현하며 기술 스택 연습하기\n\n\n### Review\n\n**오늘 한 일**\n\n\n**내일 할 것**\n\n\n### (선택)\n- 자기 평가:\n- 배운 점:\n- 막혔던 점:\n- 아이디어:\n",
     "created_at": "2026-06-04T01:02:41Z",
-    "updated_at": "2026-06-04T01:02:41Z",
+    "updated_at": "2026-06-05T01:33:13Z",
     "html_url": "https://github.com/JiseonLee-jul/daylog/issues/42"
   },
   {
